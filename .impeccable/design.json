@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T07:46:21.265593+00:00",
+  "title": "Design System: 角色工坊",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "role": "primary",
+        "displayName": "森林绿",
+        "tonalRamp": [
+          "oklch(15% 0.0176 165.56)",
+          "oklch(27% 0.0327 165.56)",
+          "oklch(39% 0.0453 165.56)",
+          "oklch(51% 0.0504 165.56)",
+          "oklch(63% 0.0504 165.56)",
+          "oklch(75% 0.0428 165.56)",
+          "oklch(87% 0.0252 165.56)",
+          "oklch(95% 0.0101 165.56)"
+        ]
+      },
+      "green-hover": {
+        "role": "primary",
+        "displayName": "深林绿",
+        "tonalRamp": [
+          "oklch(15% 0.0172 163.28)",
+          "oklch(27% 0.0320 163.28)",
+          "oklch(39% 0.0443 163.28)",
+          "oklch(51% 0.0493 163.28)",
+          "oklch(63% 0.0493 163.28)",
+          "oklch(75% 0.0419 163.28)",
+          "oklch(87% 0.0246 163.28)",
+          "oklch(95% 0.0099 163.28)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "鼠尾草底",
+        "tonalRamp": [
+          "oklch(15% 0.0020 153.77)",
+          "oklch(27% 0.0038 153.77)",
+          "oklch(39% 0.0052 153.77)",
+          "oklch(51% 0.0058 153.77)",
+          "oklch(63% 0.0058 153.77)",
+          "oklch(75% 0.0049 153.77)",
+          "oklch(87% 0.0029 153.77)",
+          "oklch(95% 0.0012 153.77)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "白纸",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(39% 0.0000 89.88)",
+          "oklch(51% 0.0000 89.88)",
+          "oklch(63% 0.0000 89.88)",
+          "oklch(75% 0.0000 89.88)",
+          "oklch(87% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "深绿墨",
+        "tonalRamp": [
+          "oklch(15% 0.0116 164.35)",
+          "oklch(27% 0.0216 164.35)",
+          "oklch(39% 0.0299 164.35)",
+          "oklch(51% 0.0332 164.35)",
+          "oklch(63% 0.0332 164.35)",
+          "oklch(75% 0.0282 164.35)",
+          "oklch(87% 0.0166 164.35)",
+          "oklch(95% 0.0066 164.35)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "草木灰",
+        "tonalRamp": [
+          "oklch(15% 0.0099 159.87)",
+          "oklch(27% 0.0185 159.87)",
+          "oklch(39% 0.0256 159.87)",
+          "oklch(51% 0.0284 159.87)",
+          "oklch(63% 0.0284 159.87)",
+          "oklch(75% 0.0242 159.87)",
+          "oklch(87% 0.0142 159.87)",
+          "oklch(95% 0.0057 159.87)"
+        ]
+      },
+      "selected": {
+        "role": "primary",
+        "displayName": "淡叶绿",
+        "tonalRamp": [
+          "oklch(15% 0.0055 154.46)",
+          "oklch(27% 0.0103 154.46)",
+          "oklch(39% 0.0142 154.46)",
+          "oklch(51% 0.0158 154.46)",
+          "oklch(63% 0.0158 154.46)",
+          "oklch(75% 0.0135 154.46)",
+          "oklch(87% 0.0079 154.46)",
+          "oklch(95% 0.0032 154.46)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "浅叶分隔",
+        "tonalRamp": [
+          "oklch(15% 0.0050 155.56)",
+          "oklch(27% 0.0093 155.56)",
+          "oklch(39% 0.0128 155.56)",
+          "oklch(51% 0.0143 155.56)",
+          "oklch(63% 0.0143 155.56)",
+          "oklch(75% 0.0121 155.56)",
+          "oklch(87% 0.0071 155.56)",
+          "oklch(95% 0.0029 155.56)"
+        ]
+      },
+      "soft": {
+        "role": "neutral",
+        "displayName": "柔灰绿",
+        "tonalRamp": [
+          "oklch(15% 0.0012 145.55)",
+          "oklch(27% 0.0022 145.55)",
+          "oklch(39% 0.0030 145.55)",
+          "oklch(51% 0.0034 145.55)",
+          "oklch(63% 0.0034 145.55)",
+          "oklch(75% 0.0029 145.55)",
+          "oklch(87% 0.0017 145.55)",
+          "oklch(95% 0.0007 145.55)"
+        ]
+      },
+      "control-border": {
+        "role": "neutral",
+        "displayName": "控件边线",
+        "tonalRamp": [
+          "oklch(15% 0.0078 154.05)",
+          "oklch(27% 0.0145 154.05)",
+          "oklch(39% 0.0200 154.05)",
+          "oklch(51% 0.0223 154.05)",
+          "oklch(63% 0.0223 154.05)",
+          "oklch(75% 0.0189 154.05)",
+          "oklch(87% 0.0111 154.05)",
+          "oklch(95% 0.0045 154.05)"
+        ]
+      },
+      "secondary-border": {
+        "role": "neutral",
+        "displayName": "次级边线",
+        "tonalRamp": [
+          "oklch(15% 0.0091 156.57)",
+          "oklch(27% 0.0169 156.57)",
+          "oklch(39% 0.0234 156.57)",
+          "oklch(51% 0.0260 156.57)",
+          "oklch(63% 0.0260 156.57)",
+          "oklch(75% 0.0221 156.57)",
+          "oklch(87% 0.0130 156.57)",
+          "oklch(95% 0.0052 156.57)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "聚焦绿",
+        "tonalRamp": [
+          "oklch(15% 0.0174 154.55)",
+          "oklch(27% 0.0323 154.55)",
+          "oklch(39% 0.0447 154.55)",
+          "oklch(51% 0.0497 154.55)",
+          "oklch(63% 0.0497 154.55)",
+          "oklch(75% 0.0422 154.55)",
+          "oklch(87% 0.0248 154.55)",
+          "oklch(95% 0.0099 154.55)"
+        ]
+      },
+      "warn": {
+        "role": "neutral",
+        "displayName": "琥珀文字",
+        "tonalRamp": [
+          "oklch(15% 0.0297 74.20)",
+          "oklch(27% 0.0551 74.20)",
+          "oklch(39% 0.0763 74.20)",
+          "oklch(51% 0.0847 74.20)",
+          "oklch(63% 0.0847 74.20)",
+          "oklch(75% 0.0720 74.20)",
+          "oklch(87% 0.0424 74.20)",
+          "oklch(95% 0.0169 74.20)"
+        ]
+      },
+      "warn-bg": {
+        "role": "neutral",
+        "displayName": "浅琥珀底",
+        "tonalRamp": [
+          "oklch(15% 0.0112 87.29)",
+          "oklch(27% 0.0209 87.29)",
+          "oklch(39% 0.0289 87.29)",
+          "oklch(51% 0.0321 87.29)",
+          "oklch(63% 0.0321 87.29)",
+          "oklch(75% 0.0273 87.29)",
+          "oklch(87% 0.0161 87.29)",
+          "oklch(95% 0.0064 87.29)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "页面主标题",
+        "purpose": "自托管 Noto Sans SC 展示子集，限主标题。"
+      },
+      "profile-name": {
+        "displayName": "角色姓名",
+        "purpose": "小屏30px；子集缺字由系统中文字体回退。"
+      },
+      "body": {
+        "displayName": "系统正文",
+        "purpose": "表单控件与正文，实际系统字体由操作系统决定。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "toast",
+        "value": "0 8px 25px #213b3026",
+        "purpose": "唯一临时反馈浮层。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "结果揭示和toast位移。"
+      },
+      {
+        "name": "profile-in",
+        "value": "450ms",
+        "purpose": "浅绿到白的更新揭示；减少动态效果时禁用。"
+      },
+      {
+        "name": "toast-opacity",
+        "value": "150ms",
+        "purpose": "提示透明度。"
+      },
+      {
+        "name": "toast-transform",
+        "value": "250ms",
+        "purpose": "提示位移。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "stack",
+        "value": "820px"
+      },
+      {
+        "name": "phone",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "主要工作动作；生成变体通栏。",
+      "html": "<button class=\"ds-button\">生成角色设定</button>",
+      "css": ".ds-button{font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;font-size:14px;font-weight:550;line-height:1.6;min-height:44px;border:0;border-radius:7px;padding:11px 17px;background:var(--green,#254a3b);color:var(--paper,#fff);cursor:pointer}.ds-button:hover{background:var(--green-hover,#173a2b)}.ds-button:focus-visible{outline:3px solid var(--focus,#61816b);outline-offset:4px}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "随机灵感等次级动作。",
+      "html": "<button class=\"ds-button ds-secondary\">随机灵感</button>",
+      "css": ".ds-button{font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;font-size:14px;font-weight:550;line-height:1.6;min-height:44px;border:0;border-radius:7px;padding:11px 17px;background:var(--green,#254a3b);color:var(--paper,#fff);cursor:pointer}.ds-button:hover{background:var(--green-hover,#173a2b)}.ds-button:focus-visible{outline:3px solid var(--focus,#61816b);outline-offset:4px}.ds-secondary{background:transparent;color:var(--green,#254a3b);border:1px solid var(--secondary-border,#abbdb1)}.ds-secondary:hover{background:var(--selected,#e1ece4)}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "具名原生字段。",
+      "html": "<label class=\"ds-label\" for=\"ds-name\">角色姓名</label><input class=\"ds-field\" id=\"ds-name\" placeholder=\"留空，生成一个新名字\">",
+      "css": ".ds-label{display:block;font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:var(--ink,#243a30);font-size:13px;font-weight:550;margin:0 0 8px}.ds-field{font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;font-size:14px;line-height:1.65;min-height:43px;padding:10px 12px;width:100%;background:var(--paper,#fff);color:var(--ink,#243a30);border:1px solid var(--control-border,#bdccc1);border-radius:6px}.ds-field::placeholder{color:var(--muted,#5d7065)}.ds-field:hover{border-color:#7d9987}.ds-field:focus-visible{outline:3px solid var(--focus,#61816b);outline-offset:4px}"
+    },
+    {
+      "name": "Main navigation",
+      "kind": "nav",
+      "description": "文字导航以底线标记当前页。",
+      "html": "<nav class=\"ds-nav\" aria-label=\"主导航\"><button aria-current=\"page\">创建角色</button><button>我的档案</button><button>参考资源</button></nav>",
+      "css": ".ds-nav{display:flex;gap:32px;border-bottom:1px solid var(--line,#d7e1da)}.ds-nav button{position:relative;font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;font-size:14px;line-height:1.65;padding:16px 2px;background:none;border:0;color:var(--muted,#5d7065);cursor:pointer}.ds-nav button[aria-current]{color:var(--green,#254a3b);font-weight:600}.ds-nav button[aria-current]:after{content:\"\";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green,#254a3b)}.ds-nav button:focus-visible{outline:3px solid var(--focus,#61816b);outline-offset:4px}"
+    },
+    {
+      "name": "Selected condition",
+      "kind": "chip",
+      "refersTo": "choice-selected",
+      "description": "原生选择配可见勾选；不依赖填色。",
+      "html": "<span class=\"ds-choice\"><input id=\"ds-choice\" type=\"checkbox\" checked><label for=\"ds-choice\">虚拟博主</label></span>",
+      "css": ".ds-choice{position:relative;display:inline-block;font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif}.ds-choice input{position:absolute;opacity:0;width:1px;height:1px}.ds-choice label{display:flex;align-items:center;gap:7px;border:1px solid var(--control-border,#bdccc1);border-radius:6px;padding:9px 13px;min-height:40px;font-size:12px;font-weight:450;cursor:pointer;color:var(--ink,#243a30)}.ds-choice input:checked+label{background:var(--selected,#e1ece4);border-color:#789781;color:#244b34}.ds-choice input:checked+label:before{content:\"\";width:8px;height:5px;border-bottom:1.5px solid currentColor;border-left:1.5px solid currentColor;transform:rotate(-45deg)}.ds-choice input:focus-visible+label{outline:3px solid var(--focus,#61816b);outline-offset:3px}"
+    },
+    {
+      "name": "Reading panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "白纸阅读面、内部细分隔与只读条件快照。",
+      "html": "<article class=\"ds-panel\"><header>角色档案</header><section><span class=\"ds-tag\">现代都市</span><p>人物概览</p><p>在现代都市中寻找被忽略的日常细节。</p></section></article>",
+      "css": ".ds-panel{font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:var(--ink,#243a30);background:var(--paper,#fff);border-radius:14px;overflow:hidden}.ds-panel header{padding:20px 25px;border-bottom:1px solid var(--line,#d7e1da);font-size:14px;font-weight:600}.ds-panel section{padding:32px 34px 35px;font-size:13px;line-height:1.95}.ds-tag{display:inline-block;background:var(--ground,#edf1ee);border-radius:4px;font-size:12px;padding:4px 9px}"
+    },
+    {
+      "name": "Provenance disclosure",
+      "kind": "custom",
+      "description": "元数据选择器按需展开，明确原图在来源站点。",
+      "html": "<details class=\"ds-disclosure\"><summary>从已绑定服装库选择</summary><p>Open Pose &amp; Costume + AI Library。只收录元数据，原图在来源站点。</p></details>",
+      "css": ".ds-disclosure{font-family:-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif;font-size:12px;line-height:1.8;color:var(--ink,#243a30);margin-top:24px;padding-top:18px;border-top:1px solid var(--line,#d7e1da)}.ds-disclosure summary{font-size:13px;cursor:pointer}.ds-disclosure summary:focus-visible{outline:3px solid var(--focus,#61816b);outline-offset:4px}.ds-disclosure p{color:var(--muted,#5d7065);margin:12px 0}"
+    }
+  ],
+  "narrative": {
+    "northStar": "角色工作台",
+    "overview": "浅鼠尾草色底面托住白色编辑区与阅读面，森林绿标示行动与选择。紧凑的中文控件服务于条件编辑，较舒展的人物档案服务于连续阅读；内容层级依靠字号、留白和细分隔线形成。\n\n这是对实际实现的记录，视觉命名为文档描述，并不代表用户另行批准了品牌方向。方向选择页等待超时，当前方向按可逆假设落地；没有已批准的设计稿或 QUALITY BAR 卡。未来大幅改变视觉身份时需重新确认方向。本界面保持本地规则生成的事实边界；外部服装资源以元数据和可选选择器呈现，不把元数据表现成已生成的图片或推断结果。",
+    "keyCharacteristics": [
+      "浅灰绿底面、森林绿操作、白色阅读面。",
+      "专用中文展示字配系统正文与原生表单。",
+      "选择、生成快照与待更新状态均有文字线索。",
+      "平面容器、细边线、有限的圆角层级。"
+    ],
+    "rules": [
+      {
+        "name": "The State Has Words Rule",
+        "body": "已选状态与待更新状态需要文字或勾选线索，不能只改变底色。",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Reading Speeds Rule",
+        "body": "编辑控件保持紧凑；人物段落保留更宽的行距，不把长篇档案压成标签密度。",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Surface Rule",
+        "body": "常驻编辑和阅读容器保持平面，浮层阴影留给临时反馈。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** 使用森林绿强调行动与当前状态，以白纸承载编辑和长文。",
+      "**Do** 为选择、快照和待更新状态提供明确文字线索。",
+      "**Do** 保持移动端先编辑后阅读的顺序，展开来源选择器时允许自然纵向增长。",
+      "**Do** 保存自托管展示字体的出处与 OFL 许可，并允许子集之外的中文字符回退。",
+      "**Do** 保留本地规则生成与元数据来源的准确说明。"
+    ],
+    "donts": [
+      "**Don't** 将静态面板改为悬浮阴影卡，或把只读快照包装成交互按钮。",
+      "**Don't** 将展示字体扩展为所有表单与长文的默认字体。",
+      "**Don't** 把外链图片、服装标签或分类属性表现为本站已生成的角色图片。"
+    ]
+  }
+}
