@@ -47,14 +47,14 @@ function generate(c, rng=Math.random){
  const hair=c.hairstyle&&c.hairstyle!=='基础发型'?c.hairstyle:c.hair;
  const sections=[
  ['人物概览',`${name}，${c.age}岁，${c.gender}。在${c.world}背景中，作为${c.role}生活于${world.place}。核心能力是${role[2]}；最在意的是${world.goal}。`],
- ['外貌与造型',`发型：${hair}。服装：${wardrobes[c.wardrobe]||c.wardrobe}。辨识点：${c.signature||'一件有使用痕迹的随身小物'}。这些外观特征作为后续创作的固定锚点。${c.reference?'所选外观参考仅用于发型与造型，不据此推断人物年龄或性格。':''}`],
+ ['外貌与造型',`发型：${hair}。服装：${c.outfit?'以所选 '+c.outfit.rendering+'服装 '+c.outfit.code+' 为准，包含 '+c.outfit.keywords:wardrobes[c.wardrobe]||c.wardrobe}。辨识点：${c.signature||'一件有使用痕迹的随身小物'}。这些外观特征作为后续创作的固定锚点。${c.reference?'所选外观参考仅用于发型与造型，不据此推断人物年龄或性格。':''}`],
  ...(c.outfit? [['服装库绑定',`选中服装：${c.outfit.rendering} · ${c.outfit.category} · ${c.outfit.code}。原始服装关键词：${c.outfit.keywords}。具体条目优先于整体服装方向。来源：${c.outfit.bindings.map(x=>`${x.source==='opc'?'Open Pose & Costume':'AI Library'} / ${x.code}`).join('；')}。原站：${c.outfit.origin}。参考原图：${c.outfit.originImage}。本工具仅绑定元数据与链接。`]]:[]),
  ...(c.fashionCategory||c.fashionAttribute?[['服装属性细化',`Fashionpedia 分类：${c.fashionCategory?.name||'未限定'}。属性：${c.fashionAttribute?.name||'未限定'}。这是创作者所选约束，不是从图片推断。来源：https://github.com/cvdfoundation/fashionpedia 。分类与属性标注来源遵循 CC BY 4.0。`]]:[]),
  ['性格与行为',`核心性格：${traitList.join('、')}。${traitList.map(t=>traits[t][0]).join('；')}。生活习惯：${habit}。内在弱点：${flaw}。`],
  ['经历与动机',`${name}原本把${role[0]}当作日常习惯，直到${world.event}，开始主动承担更大的责任。当前目标是${world.goal}。主要矛盾来自${world.conflict}；成长方向是学会向值得信赖的人说明自己的需要。`],
  ['声音与表达',`表达方式：${c.voice}。示例台词：${traits[traitList[0]][1]} 与熟人相处时会保留细小的停顿，让情绪通过具体的行动和回应被看见。`],
  [c.purpose==='虚拟博主'?'内容方向':c.purpose==='小说角色'?'叙事切入点':'互动与任务',c.purpose==='虚拟博主'?`内容主线：${role[1]}。固定栏目可以围绕「一个问题、一段亲历、一次复盘」展开。首期选题：${world.event}之后，第一次尝试把经历完整记录下来。交流原则：区分个人体验与已经核实的信息。`:c.purpose==='小说角色'?`开场让角色在${world.event}中做出一个小而有代价的决定。以${world.conflict}推动中段，让${flaw}影响关键关系；结尾通过一次主动求助或坦诚表达完成变化。`:`任务起点：围绕${world.event}提供线索。玩家可以选择独自调查或与角色协作，分别影响信息获取方式与信任关系。角色用${role[2]}提供支持，并保留自己的目标与判断。`],
- ['角色一致性提示词',`原创虚构角色「${name}」，${c.age}岁，${c.gender}，${c.world}背景，身份${c.role}，${hair}，${c.wardrobe}穿搭${c.outfit?'，服装固定为所选条目 '+c.outfit.code+'（'+c.outfit.keywords+'）':''}${c.fashionCategory?'，服装类别 '+c.fashionCategory.name:''}${c.fashionAttribute?'，服装属性 '+c.fashionAttribute.name:''}，辨识物${c.signature||'有使用痕迹的随身小物'}。人物气质：${traitList.join('、')}。跨画面固定脸部比例、发际线、发长与辨识物；先建立正面、侧面与四分之三视角参考。此提示词为本工具组合生成。`]
+ ['角色一致性提示词',`原创虚构角色「${name}」，${c.age}岁，${c.gender}，${c.world}背景，身份${c.role}，${hair}${c.reference?'，人物外观固定参考 FACE REFERENCE '+c.reference.id+'（'+c.reference.full+'），保留该参考的脸部比例、发际线与外观辨识点':''}，${c.wardrobe}穿搭${c.outfit?'，服装固定为所选条目 '+c.outfit.code+'（'+c.outfit.keywords+'）':''}${c.fashionCategory?'，服装类别 '+c.fashionCategory.name:''}${c.fashionAttribute?'，服装属性 '+c.fashionAttribute.name:''}，辨识物${c.signature||'有使用痕迹的随身小物'}。人物气质：${traitList.join('、')}。跨画面固定脸部比例、发际线、发长与辨识物；先建立正面、侧面与四分之三视角参考。此提示词为本工具组合生成。`]
  ];
  if(c.notes?.trim()) sections.push(['创作者补充约束',c.notes.trim()]);
  if(c.reference) sections.push(['外观参考来源',`FACE REFERENCE · ${c.reference.id}\n原始标签：${c.reference.style||c.reference.hair}\n原图链接：${c.reference.full}\n参考库：https://ai-portrait-gallery.pages.dev/\n来源标注 CC0；图片留在原站，本工具仅保存公开元数据与链接。`]);

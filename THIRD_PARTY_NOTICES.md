@@ -29,3 +29,7 @@ This project extracts 46 category/part names and 294 attribute names. It adds Ch
 ## Display font
 
 Noto Sans SC, Copyright 2014–2021 Adobe. Licensed under the SIL Open Font License 1.1, included at assets/fonts/OFL.txt. A display-only subset was obtained through Google Fonts; exact provenance is in assets/fonts/SOURCE.txt. Controls and body text use platform fonts. User-entered names with characters outside the subset fall back to installed Chinese fonts.
+
+## On-demand reference display (2026-11-13)
+
+The app now renders individual upstream portrait and costume thumbnails in paginated galleries (six per page). Only images near the current viewport in the active gallery are requested, using `referrerpolicy="no-referrer"`. Original-size images are fetched only when the user opens a specific preview. Selected references may appear as upstream thumbnails in the generated profile. These are direct browser requests; no image files, proxy/cache, archive or bulk-download feature is added to this repository. Failure/retry and original-source links remain available. All content still follows the original source's terms.
