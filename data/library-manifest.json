@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "retrievedAt": "2026-11-13",
+  "ingestionMode": "cached metadata (formatting may differ from source)",
+  "uniqueOutfits": 2727,
+  "sourceEntries": 4134,
+  "taxonomy": {
+    "categories": 46,
+    "attributes": 294
+  },
+  "inputs": [
+    {
+      "key": "opc-realistic",
+      "repo": "hongye007/open-pose-costume",
+      "ref": "16e378aaf0dd021b8e06001b4e1ed781580287ba",
+      "path": "data/source/costume.json",
+      "url": "https://raw.githubusercontent.com/hongye007/open-pose-costume/16e378aaf0dd021b8e06001b4e1ed781580287ba/data/source/costume.json",
+      "storedInputSha256": "a8c7315a57d2fb5c527199f673c1aa123b6ce143912e3bce6457331f0f13420a"
+    },
+    {
+      "key": "opc-anime",
+      "repo": "hongye007/open-pose-costume",
+      "ref": "16e378aaf0dd021b8e06001b4e1ed781580287ba",
+      "path": "data/source/costume-anime.json",
+      "url": "https://raw.githubusercontent.com/hongye007/open-pose-costume/16e378aaf0dd021b8e06001b4e1ed781580287ba/data/source/costume-anime.json",
+      "storedInputSha256": "7a6b353c2a57ed6064863553fb122d6cc732e4f390d6babd46d0e81f14d47f87"
+    },
+    {
+      "key": "ailib",
+      "repo": "opensegra/ai-library",
+      "ref": "22ba148db7e7714920b08fecd9b33aa564881915",
+      "path": "data/catalogue.json",
+      "url": "https://raw.githubusercontent.com/opensegra/ai-library/22ba148db7e7714920b08fecd9b33aa564881915/data/catalogue.json",
+      "storedInputSha256": "17aa558134f3f83c6ba20e2743731476b7b2c8ae7ee5d4e345fd7be4fbc8c8df"
+    },
+    {
+      "key": "fashionpedia",
+      "repo": "KMnP/fashionpedia-api",
+      "ref": "1ef732050e15d446c38d58ef945ccadc28c59328",
+      "path": "data/demo/category_attributes_descriptions.json",
+      "url": "https://raw.githubusercontent.com/KMnP/fashionpedia-api/1ef732050e15d446c38d58ef945ccadc28c59328/data/demo/category_attributes_descriptions.json",
+      "storedInputSha256": "4b59f1934c71b10b66ff95caf22c6168ca85adca13554b38324c5387edf719c8"
+    }
+  ]
+}
