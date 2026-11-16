@@ -44,10 +44,10 @@ function generate(c, rng=Math.random){
  const name=(c.name||'').trim()||surname+given;
  const habit=pick(['会在手账页脚记录当天听到的一句话','出门前会确认随身物品，回家后却总把钥匙放错位置','紧张时会用拇指摩挲随身物件的边缘','习惯提前到约定地点，留出观察周围的时间'],rng);
  const flaw=pick(['不容易开口求助，常把可以分担的事留给自己','对重要的事情准备过度，偶尔错过及时行动的机会','习惯照顾他人的感受，有时会延后表达自己的需要','太珍惜已经建立的关系，面对改变时会犹豫'],rng);
- const hair=c.hairstyle&&c.hairstyle!=='基础发型'?c.hairstyle:c.hair;
+ const hair=c.studio?.features?.hairStyle?.value||(c.hairstyle&&c.hairstyle!=='基础发型'?c.hairstyle:c.hair);
  const sections=[
  ['人物概览',`${name}，${c.age}岁，${c.gender}。在${c.world}背景中，作为${c.role}生活于${world.place}。核心能力是${role[2]}；最在意的是${world.goal}。`],
- ['外貌与造型',`发型：${hair}。服装：${c.outfit?'以所选 '+c.outfit.rendering+'服装 '+c.outfit.code+' 为准，包含 '+c.outfit.keywords:wardrobes[c.wardrobe]||c.wardrobe}。辨识点：${c.signature||'一件有使用痕迹的随身小物'}。这些外观特征作为后续创作的固定锚点。${c.reference?'所选外观参考仅用于发型与造型，不据此推断人物年龄或性格。':''}`],
+ ['外貌与造型',`发型：${hair}。服装：${c.studio?.sources?.outfit==='upload'&&c.studio?.uploads?.outfit?'以上传服装「'+c.studio.uploads.outfit.name+'」为参考，具体可见内容以已确认的提取结果为准':c.outfit?'以所选 '+c.outfit.rendering+'服装 '+c.outfit.code+' 为准，包含 '+c.outfit.keywords:wardrobes[c.wardrobe]||c.wardrobe}。辨识点：${c.signature||'一件有使用痕迹的随身小物'}。这些外观特征作为后续创作的固定锚点。${c.reference?'所选外观参考仅用于发型与造型，不据此推断人物年龄或性格。':''}`],
  ...(c.outfit? [['服装库绑定',`选中服装：${c.outfit.rendering} · ${c.outfit.category} · ${c.outfit.code}。原始服装关键词：${c.outfit.keywords}。具体条目优先于整体服装方向。来源：${c.outfit.bindings.map(x=>`${x.source==='opc'?'Open Pose & Costume':'AI Library'} / ${x.code}`).join('；')}。原站：${c.outfit.origin}。参考原图：${c.outfit.originImage}。本工具仅绑定元数据与链接。`]]:[]),
  ...(c.fashionCategory||c.fashionAttribute?[['服装属性细化',`Fashionpedia 分类：${c.fashionCategory?.name||'未限定'}。属性：${c.fashionAttribute?.name||'未限定'}。这是创作者所选约束，不是从图片推断。来源：https://github.com/cvdfoundation/fashionpedia 。分类与属性标注来源遵循 CC BY 4.0。`]]:[]),
  ['性格与行为',`核心性格：${traitList.join('、')}。${traitList.map(t=>traits[t][0]).join('；')}。生活习惯：${habit}。内在弱点：${flaw}。`],
@@ -60,6 +60,6 @@ function generate(c, rng=Math.random){
  if(c.reference) sections.push(['外观参考来源',`FACE REFERENCE · ${c.reference.id}\n原始标签：${c.reference.style||c.reference.hair}\n原图链接：${c.reference.full}\n参考库：https://ai-portrait-gallery.pages.dev/\n来源标注 CC0；图片留在原站，本工具仅保存公开元数据与链接。`]);
  return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),name,tagline:`${c.role} · ${traitList.join(' / ')}`,createdAt:new Date().toISOString(),conditions:JSON.parse(JSON.stringify(c)),sections};
 }
-function markdown(p){return `# ${p.name}\n\n${p.tagline}\n\n`+p.sections.map(([h,t])=>`## ${h}\n\n${t}`).join('\n\n')+'\n\n---\n由角色工坊本地规则组合生成；请在创作中进一步完善。\n';}
+function markdown(p){const source=p.kind==='ai'?'角色设定由 Lovart AI 生成，提示词按已确认条件整理':p.kind==='preview'?'含 Lovart 生成的预览，角色文字来源见版本记录':'由角色工坊本地规则组合生成';return `# ${p.name}\n\n${p.tagline}\n\n`+p.sections.map(([h,t])=>`## ${h}\n\n${t}`).join('\n\n')+`\n\n---\n${source}；请检查并进一步完善。\n`;}
 root.CharacterEngine={generate,markdown,worlds,roles,traits,wardrobes};
 })(typeof window==='undefined'?globalThis:window);

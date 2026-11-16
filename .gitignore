@@ -5,3 +5,10 @@ node_modules/
 .impeccable/mocks/
 .impeccable/review/
 .impeccable/decision.json
+
+.env
+.env.*
+!.env.example
+.local-data/
+__pycache__/
+*.pyc

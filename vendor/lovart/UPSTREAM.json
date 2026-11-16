@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/lovartai/lovart-skill",
+  "commit": "284e7a28d6505e36c3e29e926139ceb9a7f0f5a6",
+  "clientPath": "skills/lovart-skill/scripts/agent_skill.py",
+  "sha256": "c53d7336cf7c66ea8d7f38dd18eb9c371b01e7c6745bc2a6a0cffdead4f45134",
+  "license": "MIT, declared in upstream SKILL.md frontmatter; upstream has no standalone LICENSE. LICENSE reproduces standard MIT terms with upstream author attribution."
+}

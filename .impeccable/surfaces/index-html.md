@@ -21,3 +21,6 @@ User explicitly requests browsable portrait/outfit reference images, filters, se
 
 ## Category selection extension — 2026-11-16
 Expose existing metadata as category button groups, with one active choice per group and intersection across groups. Show facet counts conditioned on other filters, an explicit selected path, empty recovery, synchronized native dropdowns, and per-image category labels. Preserve canonical image selections while filtering. Maintain incumbent palette, typography, spacing and controls; no system redesign or image archive. Unlabelled metadata remains reachable in dedicated categories, and garment categories may overlap within a multi-piece outfit.
+
+## Character AI extension — 2026-11-16
+Preserve incumbent tokens and static workflows. Add a fourth parameter/AI editor group, 13 labelled feature inputs and explicit locks, local service status, role-based uploads, selective extraction adoption, async job recovery, version comparison and preview acceptance. No new visual system or generated shipping raster. Mocked browser fixtures are test evidence only. Lovart live generation remains user-triggered.

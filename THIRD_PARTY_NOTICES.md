@@ -33,3 +33,6 @@ Noto Sans SC, Copyright 2014–2021 Adobe. Licensed under the SIL Open Font Lice
 ## On-demand reference display (2026-11-13)
 
 The app now renders individual upstream portrait and costume thumbnails in paginated galleries (six per page). Only images near the current viewport in the active gallery are requested, using `referrerpolicy="no-referrer"`. Original-size images are fetched only when the user opens a specific preview. Selected references may appear as upstream thumbnails in the generated profile. These are direct browser requests; no image files, proxy/cache, archive or bulk-download feature is added to this repository. Failure/retry and original-source links remain available. All content still follows the original source's terms.
+# Lovart 官方客户端（仅本机后端）
+
+`vendor/lovart/agent_skill.py` 固定来自 lovartai/lovart-skill 提交 `284e7a28d6505e36c3e29e926139ceb9a7f0f5a6`。来源、SHA-256 与许可依据见 `vendor/lovart/UPSTREAM.json`；上游 SKILL.md 声明 MIT，原始文件与 MIT 条款随源码保留。本机客户端不随 GitHub Pages 静态构建发布。Lovart 服务本身的使用条款、额度和模型权限由账号与平台决定。
