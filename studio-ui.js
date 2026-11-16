@@ -20,13 +20,13 @@ async function api(path,{body,raw,name}={}){
  if(!response.ok)throw Error(data.error||'请求失败，请检查服务后重试。');return data;
 }
 async function asset(id){if(!assets.has(id))assets.set(id,api('/api/assets/'+id).catch(()=>null));return assets.get(id);}
-function available(){return health.local&&health.configured&&health.projectReady;}
-function controls(){document.querySelectorAll('[data-ai-action]').forEach(el=>el.disabled=!available()||busy);document.querySelectorAll('[data-upload]').forEach(el=>el.disabled=!health.local||busy);$('create-project').hidden=!health.local||!health.configured||health.projectReady;$('create-project').disabled=busy;}
+function available(){return health.local&&(health.model?.enabled?health.model.configured:health.configured&&health.projectReady);}
+function controls(){document.querySelectorAll('[data-ai-action]').forEach(el=>el.disabled=!available()||busy);document.querySelectorAll('[data-upload]').forEach(el=>el.disabled=!health.local||busy);$('create-project').hidden=!health.local||!health.configured||health.projectReady;$('create-project').disabled=busy;if(health.model?.enabled)$('ai-preview').disabled=true;}
 async function checkService(){
  const local=['localhost','127.0.0.1'].includes(location.hostname)&&location.protocol==='http:';
  try{health=local?await api('/api/health'):{local:false,configured:false,projectReady:false};}catch{health={local:false,configured:false,projectReady:false};}
  $('service-status').textContent=!health.local?'在线基础版：参数捏脸、选图与 Lovart 导出可用；复制指令后到 Lovart 粘贴并发送。':!health.configured?'本机参考图服务已连接。使用「导出到 Lovart」即可继续创作，无需 AK/SK。':!health.projectReady?'Lovart 凭据已配置。请设置已有项目 ID，或在下方创建专用项目。':'本机完整版已连接。每次点击 AI 操作才发送选中的参考图，可能消耗 Lovart 额度。';
- if(health.local&&!available())$('local-help').open=true;controls();renderUploads();window.CharacterApp?.refreshResult();
+ if(health.local&&health.model?.enabled)$('service-status').textContent='自定义 AI 模型已启用：文字／识图使用接入模型，生图继续通过 Lovart 导出。';document.dispatchEvent(new CustomEvent('model-health',{detail:health}));if(health.local&&!available())$('local-help').open=true;controls();renderUploads();window.CharacterApp?.refreshResult();
  if(health.local&&!activeJob){try{const data=await api('/api/jobs');const recent=data.jobs.find(x=>['queued','running','pending_confirmation','timeout','interrupted'].includes(x.status))||data.jobs[0];if(recent)showJob(recent);}catch{/* Basic tools stay available. */}}
 }
 function renderFeatures(){
@@ -147,7 +147,7 @@ function adoptDesign(job,box){
   let profile=window.CharacterApp.build(c,'ai');
   if(!c.name&&result.name)profile.name=result.name;if(result.tagline)profile.tagline=result.tagline;
   for(const [h,t] of result.sections){const item=profile.sections.find(x=>x[0]===h);if(item)item[1]=t;else profile.sections.push([h,t]);}
-  profile=core.decorate(profile,'ai',window.CharacterApp.current());profile.provider={name:'Lovart',jobId:job.id};
+  profile=core.decorate(profile,'ai',window.CharacterApp.current());profile.provider={name:job.providerName||'Lovart',jobId:job.id};
   if(unchanged)window.CharacterApp.setConditions(c);
   window.CharacterApp.present(profile);rememberApplied(job);diff.querySelectorAll('button').forEach(x=>x.disabled=true);use.disabled=true;use.textContent='已采用，可在版本记录中查看';notify(unchanged?'AI 设定已生成新版本。':'已采用提交时的条件生成新版本，当前草稿仍保留。');
  });use.disabled=applied.includes(job.id);box.append(use);
@@ -190,8 +190,8 @@ function imageFigure(container,ref,label){
 function renderResult(profile,isExample){
  if(!isExample)record(profile);
  const result=$('result'),s=core.normalize(profile.conditions.studio);
- document.querySelector('.result-bottom>span').textContent=profile.kind==='ai'?'Lovart AI 设定 · 请检查后使用':profile.kind==='preview'?'Lovart 图片预览 · 文字来源见版本':'本地规则组合 · 可继续编辑完善';$('regenerate').textContent=profile.kind==='ai'||profile.kind==='preview'?'按当前条件生成基础新版':'按当前条件换一版';
- result.append(node('p',`${profile.kind==='ai'?'Lovart AI 设定':profile.kind==='preview'?'Lovart 图片预览':'本地基础设定'} · 版本 ${profile.version?.number||1}`,'studio-meta'));
+ document.querySelector('.result-bottom>span').textContent=profile.kind==='ai'?(profile.provider?.name||'Lovart')+' AI 设定 · 请检查后使用':profile.kind==='preview'?'Lovart 图片预览 · 文字来源见版本':'本地规则组合 · 可继续编辑完善';$('regenerate').textContent=profile.kind==='ai'||profile.kind==='preview'?'按当前条件生成基础新版':'按当前条件换一版';
+ result.append(node('p',`${profile.kind==='ai'?(profile.provider?.name||'Lovart')+' AI 设定':profile.kind==='preview'?'Lovart 图片预览':'本地基础设定'} · 版本 ${profile.version?.number||1}`,'studio-meta'));
  const comparison=node('div',undefined,'studio-comparison');
  if(s.sources.person==='upload')imageFigure(comparison,s.uploads.person,'人物原始参考');
  if(s.sources.outfit==='upload')imageFigure(comparison,s.uploads.outfit,'服装原始参考');
@@ -205,6 +205,6 @@ function renderResult(profile,isExample){
  select.addEventListener('change',()=>{const p=list.find(x=>x.id===select.value);if(p){window.CharacterApp.present(clone(p));notify('已查看历史版本，当前条件草稿保留。');}});row.append(label,select,node('p','自动保留最近 50 个版本。保存档案可长期保留；导出全部档案也包含这些版本。'));
  $('result').after(row);summary();
 }
-window.Studio={get:()=>core.normalize(state),set,summary,renderResult,versions:()=>versions.filter(x=>window.CharacterApp.valid(x))};
+window.Studio={get:()=>core.normalize(state),set,summary,renderResult,refreshService:checkService,versions:()=>versions.filter(x=>window.CharacterApp.valid(x))};
 set(state);queueMicrotask(checkService);
 })();

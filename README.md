@@ -106,3 +106,13 @@ GitHub Actions 在 main 更新时运行生成逻辑测试，构建并部署 Page
 点击页头「导出到 Lovart」，选择「角色设定＋一张预览图」「只整理设定与提示词」或「只识图提取特征」。导出实时使用当前表单的参数、锁定、来源和改进要求，不使用尚未更新的旧档案。可填写已有 Lovart 项目链接，留空打开首页；仅接受 Lovart HTTPS 首页／canvas 项目链接。
 
 点击「复制并打开 Lovart」后，在 Lovart 粘贴指令，上传／关联清单中的参考图，再亲自发送。可仅复制或下载 Markdown 备份。第三方图库只输出当前有效参考的链接，不批量下载图片。本机上传图不会随文本导出传输；图片文件必须另行上传。网页不自动提交生成、不读取 Lovart 的登录凭据、不自动同步结果，也不把本地文件地址当作 Lovart 可访问的图片链接。API 接入保留为已有可用凭据账号的可选功能，当前推荐使用半自动导出。
+
+## AI 模型接入
+
+顶部「AI 模型接入」打开配置区。本机版可填写 OpenAI 兼容 Chat Completions 的 Base URL、文字模型 ID、可选识图模型 ID 与 API Key，保存后立即用于文字／识图任务，无需重启。云服务要求 HTTPS；localhost／127.0.0.1 的本地兼容服务可用 HTTP，无鉴权时密钥可留空。模型名、区域地址与账号权限以服务控制台为准。
+
+配置仅保存在本机 `.local-data/ai-config.json`，权限 0600；读取接口只返回密钥是否存在，不返回密钥。留空保留同域名已有密钥；更换服务域名需重新填写密钥。支持清除配置，档案和 Lovart 导出不含接入配置。测试已保存连接会发一次短文本请求，可能收费；测试成功只表示文字调用有效，识图需单独验证。
+
+启用兼容配置后，AI 设定走文字模型；涉及选中参考图的设定或提取需配置识图模型，上传图以图片内容发送，不使用不可访问的本机 URL。兼容接口本次仅接文字与识图，生图继续通过 Lovart 导出；已有 Lovart API 接入保留。在线 Pages 版只展示说明，不收集密钥或在浏览器直接调用模型。新后端部署后需重启现有本机服务一次。
+
+接口依据：[DeepSeek](https://api-docs.deepseek.com/)、[百炼兼容接口](https://help.aliyun.com/zh/model-studio/compatibility-of-openai-with-dashscope)、[Chat Completions](https://developers.openai.com/api/reference/resources/chat)。

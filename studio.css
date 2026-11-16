@@ -11,3 +11,7 @@
 .studio-local-generate{width:100%;margin-top:22px}
 
 .lovart-export{padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--line)}.lovart-export h3{font-size:17px;margin:0 0 8px}.lovart-export textarea{font-size:13px;line-height:1.8;max-height:300px;resize:vertical}.lovart-export a{font-size:13px}.lovart-export [aria-invalid=true]{border-color:var(--warn)}.lovart-export-status{overflow-wrap:anywhere}
+
+.model-settings{display:block}.model-settings>summary{cursor:pointer;font-weight:600;color:var(--green)}.model-settings[open]>summary{margin-bottom:16px}.model-settings .field-grid{width:100%;margin-top:16px}.model-settings .model-enable{display:flex;align-items:center;gap:8px;margin:16px 0}.model-enable input{width:18px;height:18px;min-height:0;margin:0;accent-color:var(--green)}.model-settings input,.model-settings select{max-width:100%}
+
+@media(max-width:480px){.model-settings .field-grid{grid-template-columns:1fr}}

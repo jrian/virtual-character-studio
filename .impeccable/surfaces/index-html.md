@@ -27,3 +27,6 @@ Preserve incumbent tokens and static workflows. Add a fourth parameter/AI editor
 
 ## Lovart export extension — 2026-11-16
 Add a visible export shortcut and a form-top handoff section within the existing Operate system. Live conditions, explicit file checklist, optional Lovart destination, copy/open/download and honest manual-submit feedback. Preserve DESIGN.md and sidecar; no new visual system or media.
+
+## Model connection extension — 2026-11-16
+Preserve incumbent Operate system. Header shortcut opens a disclosure before workspace with endpoint/model/password fields, enable checkbox, save/test/clear and explicit state. Same typography/spacing and responsive grid; no new imagery or visual system.

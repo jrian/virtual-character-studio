@@ -1,4 +1,5 @@
 """Local-only character studio. Python standard library + pinned official Lovart client."""
+from model_gateway import ModelGateway, ModelError
 import argparse
 import importlib.util
 import json
@@ -168,6 +169,7 @@ class Studio:
         self.lock = threading.RLock()
         self.path = self.directory / 'state.json'
         self.data = json.loads(self.path.read_text()) if self.path.exists() else {'assets': {}, 'jobs': {}, 'projectId': ''}
+        self.gateway = ModelGateway(self.directory)
         self.timeout = timeout
         self.client_factory = client_factory
         for job in self.data['jobs'].values():
@@ -196,7 +198,7 @@ class Studio:
 
     def health(self):
         return {'local': True, 'configured': bool(os.environ.get('LOVART_ACCESS_KEY') and os.environ.get('LOVART_SECRET_KEY')),
-                'projectReady': bool(self.project()), 'maxUploadBytes': MAX_IMAGE}
+                'projectReady': bool(self.project()), 'maxUploadBytes': MAX_IMAGE, 'model': self.gateway.public()}
 
     def public_asset(self, asset):
         return {k: asset[k] for k in ('id', 'name', 'url', 'kind')}
@@ -259,8 +261,15 @@ class Studio:
         if not isinstance(request_id, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{8,80}', request_id):
             raise Problem('缺少有效请求编号。')
         c = snapshot(body.get('conditions'))
-        self.client()  # Fail before reserving a job when credentials are missing.
-        if not self.project():
+        compatible = self.gateway.public()['enabled']
+        if compatible:
+            if not self.gateway.public()['configured']:
+                raise Problem('请先配置 AI 模型入口。', 503)
+            if body['kind'] == 'preview':
+                raise Problem('当前兼容接口用于文字与识图，生图请使用 Lovart 导出。')
+        else:
+            self.client()
+        if not compatible and not self.project():
             raise Problem('先配置 LOVART_PROJECT_ID，或点击「创建专用项目」。', 503)
         refs = self.references(c)
         if body['kind'] == 'extract' and not refs:
@@ -273,7 +282,7 @@ class Studio:
                 raise Problem('有任务仍在处理或等待确认。请先查看任务状态。', 409)
             ident = secrets.token_hex(16)
             self.data['jobs'][ident] = {'id': ident, 'requestId': request_id, 'kind': body['kind'], 'status': 'queued',
-                                      'conditions': c, 'references': refs, 'createdAt': time.time(), 'message': '等待 Lovart 处理。'}
+                                      'backend': 'compatible' if compatible else 'lovart', 'conditions': c, 'references': refs, 'createdAt': time.time(), 'message': '等待 Lovart 处理。'}
             self.save()
         if launch:
             self.launch(ident, 'send')
@@ -295,6 +304,15 @@ class Studio:
     def run(self, ident, action='send'):
         try:
             job = self.job(ident)
+            if job.get('backend') == 'compatible':
+                self.update(ident, status='running', message='模型正在处理，未自动重试。')
+                prompt_refs = [{k: v for k, v in ref.items() if k in ('role', 'name') or (k == 'url' and not ref.get('id'))} for ref in job['references']]
+                text = self.gateway.generate(make_prompt(job['kind'], job['conditions'], prompt_refs), job['references'], self.media)
+                parsed = parse_text({'items': [{'text': text}]}, job['kind'])
+                if parsed.get('message'):
+                    parsed['message'] = parsed['message'].replace('Lovart', '模型服务')
+                self.update(ident, status='invalid' if parsed.get('invalid') else 'done', result=parsed, message=parsed.get('message', '模型结果已返回，请检查后采用。'), providerName='已接入模型')
+                return
             client = self.client()
             if action == 'send':
                 self.update(ident, status='running', message='正在提交到 Lovart。')
@@ -336,7 +354,7 @@ class Studio:
         except Exception as exc:
             # Provider errors can contain request details; never send them verbatim to browser/logs.
             code = getattr(exc, 'code', 0)
-            message = str(exc) if isinstance(exc, Problem) else ('Lovart 请求受限，请稍后查询。' if code == 429 else 'Lovart 请求失败或连接中断。未自动重发，请在 Lovart 项目中核对。')
+            message = str(exc) if isinstance(exc, (Problem, ModelError)) else ('Lovart 请求受限，请稍后查询。' if code == 429 else 'Lovart 请求失败或连接中断。未自动重发，请在 Lovart 项目中核对。')
             job = self.job(ident)
             recover = bool(job.get('threadId')) and not isinstance(exc, Problem)
             self.update(ident, status='interrupted' if recover else 'failed', message=message)
@@ -390,7 +408,9 @@ def handler_for(studio):
                 if not self.allowed_host():
                     raise Problem('仅允许本机访问。', 403)
                 path = urllib.parse.urlparse(self.path).path
-                if path == '/api/health':
+                if path == '/api/model-config':
+                    self.send_json(studio.gateway.public())
+                elif path == '/api/health':
                     self.send_json(studio.health())
                 elif path == '/api/jobs':
                     with studio.lock:
@@ -438,7 +458,12 @@ def handler_for(studio):
                     body = json.loads(raw)
                     if not isinstance(body, dict):
                         raise Problem('请求格式不正确。')
-                    if path == '/api/jobs':
+                    if path in ('/api/model-config', '/api/model-test'):
+                        with studio.lock:
+                            if any(x['status'] in ACTIVE for x in studio.data['jobs'].values()):
+                                raise Problem('请先完成已有任务再修改或测试模型接入。', 409)
+                            result = studio.gateway.save(body) if path == '/api/model-config' else studio.gateway.test()
+                    elif path == '/api/jobs':
                         result = studio.create_job(body)
                     elif path == '/api/project':
                         with studio.lock:
@@ -451,8 +476,8 @@ def handler_for(studio):
                     else:
                         raise Problem('接口不存在。', 404)
                 self.send_json(result)
-            except Problem as exc:
-                self.send_json({'error': str(exc)}, exc.status)
+            except (Problem, ModelError) as exc:
+                self.send_json({'error': str(exc)}, getattr(exc, 'status', 400))
             except (ValueError, TypeError, AttributeError):
                 self.send_json({'error': '请求格式不正确。'}, 400)
             except Exception:

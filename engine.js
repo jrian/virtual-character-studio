@@ -60,6 +60,6 @@ function generate(c, rng=Math.random){
  if(c.reference) sections.push(['外观参考来源',`FACE REFERENCE · ${c.reference.id}\n原始标签：${c.reference.style||c.reference.hair}\n原图链接：${c.reference.full}\n参考库：https://ai-portrait-gallery.pages.dev/\n来源标注 CC0；图片留在原站，本工具仅保存公开元数据与链接。`]);
  return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,8),name,tagline:`${c.role} · ${traitList.join(' / ')}`,createdAt:new Date().toISOString(),conditions:JSON.parse(JSON.stringify(c)),sections};
 }
-function markdown(p){const source=p.kind==='ai'?'角色设定由 Lovart AI 生成，提示词按已确认条件整理':p.kind==='preview'?'含 Lovart 生成的预览，角色文字来源见版本记录':'由角色工坊本地规则组合生成';return `# ${p.name}\n\n${p.tagline}\n\n`+p.sections.map(([h,t])=>`## ${h}\n\n${t}`).join('\n\n')+`\n\n---\n${source}；请检查并进一步完善。\n`;}
+function markdown(p){const source=p.kind==='ai'?'角色设定由 '+(p.provider?.name||'Lovart')+' AI 生成，提示词按已确认条件整理':p.kind==='preview'?'含 Lovart 生成的预览，角色文字来源见版本记录':'由角色工坊本地规则组合生成';return `# ${p.name}\n\n${p.tagline}\n\n`+p.sections.map(([h,t])=>`## ${h}\n\n${t}`).join('\n\n')+`\n\n---\n${source}；请检查并进一步完善。\n`;}
 root.CharacterEngine={generate,markdown,worlds,roles,traits,wardrobes};
 })(typeof window==='undefined'?globalThis:window);
