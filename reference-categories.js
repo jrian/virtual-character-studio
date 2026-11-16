@@ -7,7 +7,7 @@ const portraitFeatures=[
  {value:'curly',label:'卷发',pattern:/パーマ|カール|くるくる|卷发|卷|perm|curl/i},
  {value:'bob',label:'波波头',pattern:/ボブ|波波|bob/i},
  {value:'layered',label:'层次 / 狼尾',pattern:/レイヤー|ウルフ|ハッシュ|バタフライ|シャギー|层次|狼尾|layer|wolf/i},
- {value:'unspecified',label:'未标注特征'}
+ {value:'unspecified',label:'其他 / 未标注'}
 ];
 const outfitGarments=[
  {value:'all',label:'全部单品'},
