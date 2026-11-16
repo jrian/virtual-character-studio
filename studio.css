@@ -9,3 +9,5 @@
 @media(max-width:1100px){.face-fields{grid-template-columns:1fr}.studio-comparison{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:820px){.face-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-service{padding:18px 22px}.version-controls{padding:14px 22px}}@media(max-width:480px){.face-fields{grid-template-columns:1fr}.studio-service{padding:16px}.studio-comparison img{height:145px}.studio-actions>.button{width:100%}.step-nav{gap:0}.step-nav button{padding:10px;font-size:12px}.upload-preview{flex-wrap:wrap}.studio-service>div{min-width:0}.version-controls{padding:14px 20px}}
 
 .studio-local-generate{width:100%;margin-top:22px}
+
+.lovart-export{padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--line)}.lovart-export h3{font-size:17px;margin:0 0 8px}.lovart-export textarea{font-size:13px;line-height:1.8;max-height:300px;resize:vertical}.lovart-export a{font-size:13px}.lovart-export [aria-invalid=true]{border-color:var(--warn)}.lovart-export-status{overflow-wrap:anywhere}

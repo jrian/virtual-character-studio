@@ -66,6 +66,41 @@ function decorate(profile,kind='local',previous=null){
  p.sections.push(['中文生图提示词',p.prompts.positive],['避免项',p.prompts.negative],['角色一致性提示词',p.prompts.consistency]);
  return p;
 }
-root.StudioCore={fields,normalize,merge,effective,prompts,decorate};
+function lovartExport(c,task='generate'){
+ const s=normalize(c.studio),e=effective(c),p=prompts(c,c.name||'待命名角色'),references=[];
+ for(const role of ['person','outfit']){
+  const label=role==='person'?'人物身份':'服装造型';
+  if(s.sources[role]==='upload')references.push({label,name:s.uploads[role]?.name||'尚未上传',manual:true,missing:!s.uploads[role]});
+  else if(s.sources[role]==='gallery'){
+   const ref=role==='person'?e.reference:e.outfit;
+   if(ref)references.push({label,name:ref.code||ref.id,url:role==='person'?ref.full:ref.originImage,manual:false});
+  }
+ }
+ if(s.uploads.style)references.push({label:'画面风格',name:s.uploads.style.name,manual:true});
+ if(s.anchor&&s.mode==='preserve')references.push({label:'已确认身份锚图',name:s.anchor.name,manual:true});
+ const tasks={generate:'请根据以下已选择的参数，生成完整角色设定、中文生图提示词、避免项、即梦／Seedance角色一致性描述，并生成一张单人角色预览图。',extract:'请仅分析本次参考图，提取清晰可见的外貌、服装和画面风格，区分观察、不确定内容和改进建议。先输出文字供我确认，本次不要生成图片。',prompt:'请根据以下参数完善角色设定，整理中文生图提示词、避免项和即梦／Seedance角色一致性描述。本次只输出文字，不生成图片。'};
+ const featureLines=Object.entries(s.features).map(([key,f])=>`- ${fields[key][0]}：${f.value}${f.locked?'；锁定，不可改动':'；保留当前设置，如需替换先提出差异供我确认'}`);
+ const refLines=references.map((r,i)=>`${i+1}. ${r.label}：${r.name}${r.url?'\n   原图链接：'+r.url:r.missing?'\n   缺失：先等我补充图片，不要假定已获得参考。':'\n   待我在 Lovart 手动上传／关联该图片；本次导出没有传输图片文件。'}`);
+ const content=[
+ '# 角色工坊 → Lovart 生成任务',tasks[task]||tasks.generate,
+ '## 当前选择的角色参数',`姓名：${c.name||'请根据角色设定命名'}\n创作用途：${c.purpose}\n年龄：${c.age}\n性别设定：${c.gender}\n身份定位：${c.role}\n世界背景：${c.world}\n性格：${(c.traits||[]).join('、')}\n声音与表达：${c.voice}\n发长：${c.hair}\n发型：${s.features.hairStyle?.value||c.hairstyle}\n整体服装方向：${c.wardrobe}\n辨识物：${c.signature||'未限定'}`,
+ '## 面部与造型特征',featureLines.join('\n')||'未指定面部细节，可以提出符合创作目标的方案。',
+ '## 本次处理方式',`${s.mode==='redesign'?'借鉴已确认特征，重新设计原创人物，不沿用身份锚图。':'保留原貌：保持人物身份，明确指定的修改除外。'}\n${s.strategy==='redesign'?'可为未锁定特征提出新方案；已有手动值需我明确确认才能替换。':'补全未填写特征，保留已有设置。'}`,
+ '## 本次参考与传图清单',refLines.join('\n')||'本次仅使用文字参数，没有关联参考图片。',
+ '参考优先级：锁定特征 > 当前手动设置 > 已确认的图片提取结果 > AI 补全。人物、服装与风格参考分工，不互相转移身份。先确认参考是否实际可见；链接无法读取时请告诉我并等我手动上传，不要假定已经看过图片。',
+ '## 生图描述',p.positive,'## 避免项',p.negative,'## 角色连续性',p.consistency,
+ '## 输出要求','将人物身份、服装、画面风格和允许变化分别表达；不从图片猜测国籍、真实身份或性格。修改建议与原设置不同须列出差异，不覆盖锁定项。只执行本任务要求，不生成视频、音频或多张变体。'
+ ];
+ return {text:content.join('\n\n'),references};
+}
+function lovartTarget(value){
+ if(!String(value||'').trim())return 'https://www.lovart.ai/';
+ try{const u=new URL(String(value).trim());if(u.protocol!=='https:'||!['lovart.ai','www.lovart.ai'].includes(u.hostname)||u.username||u.password||u.port)throw Error();
+  if(u.pathname==='/'&&!u.search)return 'https://www.lovart.ai/';
+  const id=u.searchParams.get('projectId');if(u.pathname!=='/canvas'||!id||!/^[a-zA-Z0-9_-]{1,160}$/.test(id))throw Error();
+  return 'https://www.lovart.ai/canvas?projectId='+encodeURIComponent(id);
+ }catch{throw Error('请填写 Lovart 首页或项目链接（https://www.lovart.ai/canvas?projectId=…）。');}
+}
+root.StudioCore={fields,normalize,merge,effective,prompts,decorate,lovartExport,lovartTarget};
 if(typeof module!=='undefined')module.exports=root.StudioCore;
 })(typeof window==='undefined'?globalThis:window);

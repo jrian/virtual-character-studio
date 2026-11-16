@@ -25,7 +25,7 @@ function controls(){document.querySelectorAll('[data-ai-action]').forEach(el=>el
 async function checkService(){
  const local=['localhost','127.0.0.1'].includes(location.hostname)&&location.protocol==='http:';
  try{health=local?await api('/api/health'):{local:false,configured:false,projectReady:false};}catch{health={local:false,configured:false,projectReady:false};}
- $('service-status').textContent=!health.local?'在线基础版：参数捏脸、选图和档案可用。AI、图片上传与预览请使用本机完整版。':!health.configured?'本机服务已连接。请在 .env.local 配置 Lovart AK/SK，重启服务后重新检查。':!health.projectReady?'Lovart 凭据已配置。请设置已有项目 ID，或在下方创建专用项目。':'本机完整版已连接。每次点击 AI 操作才发送选中的参考图，可能消耗 Lovart 额度。';
+ $('service-status').textContent=!health.local?'在线基础版：参数捏脸、选图与 Lovart 导出可用；复制指令后到 Lovart 粘贴并发送。':!health.configured?'本机参考图服务已连接。使用「导出到 Lovart」即可继续创作，无需 AK/SK。':!health.projectReady?'Lovart 凭据已配置。请设置已有项目 ID，或在下方创建专用项目。':'本机完整版已连接。每次点击 AI 操作才发送选中的参考图，可能消耗 Lovart 额度。';
  if(health.local&&!available())$('local-help').open=true;controls();renderUploads();window.CharacterApp?.refreshResult();
  if(health.local&&!activeJob){try{const data=await api('/api/jobs');const recent=data.jobs.find(x=>['queued','running','pending_confirmation','timeout','interrupted'].includes(x.status))||data.jobs[0];if(recent)showJob(recent);}catch{/* Basic tools stay available. */}}
 }
@@ -65,9 +65,38 @@ function set(value){
  summary();
 }
 for(const [id,key] of [['identity-mode','mode'],['ai-strategy','strategy'],['ai-instructions','instructions']])$(id).addEventListener(id==='ai-instructions'?'input':'change',()=>{state[key]=$(id).value;changed();});
+function renderExport(c){
+ const pack=core.lovartExport(c,$('lovart-export-task').value);$('lovart-export-text').value=pack.text;
+ $('lovart-reference-checklist').replaceChildren();
+ for(const ref of pack.references){const p=node('p',`${ref.label} · ${ref.name}${ref.manual?'：需在 Lovart 手动上传或关联':'：指令已含原图链接；如无法读取，请在 Lovart 手动上传'}`);if(ref.url){const a=node('a','查看参考原图');a.href=ref.url;a.target='_blank';a.rel='noopener noreferrer';p.append(document.createTextNode(' '),a);}$('lovart-reference-checklist').append(p);}
+}
+function exportTarget(){
+ try{const target=core.lovartTarget($('lovart-target').value);$('lovart-target-error').textContent='';$('lovart-target').removeAttribute('aria-invalid');$('lovart-open-link').href=target;store('character-studio-lovart-target',target);return target;}
+ catch(e){$('lovart-target-error').textContent=e.message;$('lovart-target').setAttribute('aria-invalid','true');$('lovart-open-link').removeAttribute('href');return null;}
+}
+async function copyExport(open=false){
+ if(!window.CharacterApp.validate())return;
+ const target=exportTarget();if(!target){$('lovart-target').focus();return;}
+ renderExport(window.CharacterApp.conditions());const text=$('lovart-export-text').value;
+ // Open only the target page, never an undocumented prompt URL or an automatic submission.
+ let copying;try{copying=navigator.clipboard.writeText(text);}catch{copying=Promise.reject(Error('clipboard unavailable'));}
+ if(open)window.open(target,'_blank','noopener,noreferrer');
+ let ok=false;try{await copying;ok=true;}catch{const area=$('lovart-export-text');area.focus();area.select();try{ok=document.execCommand('copy');}catch{}}
+ $('lovart-export-status').textContent=ok?(open?'指令已复制，已请求打开 Lovart。请粘贴指令、补充参考图，再点击发送。':'指令已复制。请到目标 Lovart 项目粘贴、补充参考图并发送。'):'浏览器未能复制。导出文字已选中，请按 Ctrl+C／⌘C；也可下载指令文件。';
+ notify(ok?'Lovart 指令已复制，等待你在 Lovart 中粘贴并发送。':'复制未完成，请手动复制或下载指令。');
+}
+$('lovart-target').value=read('character-studio-lovart-target','');exportTarget();
+$('lovart-target').addEventListener('input',exportTarget);
+$('lovart-export-task').addEventListener('change',()=>renderExport(window.CharacterApp.conditions()));
+$('lovart-copy').addEventListener('click',()=>copyExport());$('lovart-copy-open').addEventListener('click',()=>copyExport(true));
+$('open-lovart-export').addEventListener('click',()=>{document.querySelector('[data-step=studio]').click();renderExport(window.CharacterApp.conditions());$('lovart-export').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+$('lovart-download').addEventListener('click',()=>{
+ if(!window.CharacterApp.validate()||!exportTarget())return;
+ const c=window.CharacterApp.conditions(),text=core.lovartExport(c,$('lovart-export-task').value).text,url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),a=node('a');a.href=url;a.download=(c.name||'未命名角色').replace(/[\\/:*?"<>|]/g,'_')+'-Lovart生成指令.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('lovart-export-status').textContent='指令文件已导出。可复制文件中的文字到 Lovart；参考图片需另外上传。';
+});
 function summary(){
  if(!window.CharacterApp)return;
- const c=window.CharacterApp.conditions(),labels=[];
+ const c=window.CharacterApp.conditions(),labels=[];renderExport(c);
  for(const role of ['person','outfit']){const source=state.sources[role],ref=source==='upload'?state.uploads[role]?.name:source==='gallery'?(role==='person'?c.reference?.id:c.outfit?.code):null;labels.push(`${roleLabels[role]}：${ref||(source==='upload'?'上传图片缺失':'仅文字条件')}`);}
  if(state.uploads.style)labels.push('风格：'+state.uploads.style.name);
  $('active-reference-summary').textContent='本次参考 · '+labels.join('；');

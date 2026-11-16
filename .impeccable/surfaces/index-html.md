@@ -24,3 +24,6 @@ Expose existing metadata as category button groups, with one active choice per g
 
 ## Character AI extension — 2026-11-16
 Preserve incumbent tokens and static workflows. Add a fourth parameter/AI editor group, 13 labelled feature inputs and explicit locks, local service status, role-based uploads, selective extraction adoption, async job recovery, version comparison and preview acceptance. No new visual system or generated shipping raster. Mocked browser fixtures are test evidence only. Lovart live generation remains user-triggered.
+
+## Lovart export extension — 2026-11-16
+Add a visible export shortcut and a form-top handoff section within the existing Operate system. Live conditions, explicit file checklist, optional Lovart destination, copy/open/download and honest manual-submit feedback. Preserve DESIGN.md and sidecar; no new visual system or media.

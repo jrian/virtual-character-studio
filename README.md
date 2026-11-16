@@ -100,3 +100,9 @@ GitHub Actions 在 main 更新时运行生成逻辑测试，构建并部署 Page
 `npm test` 验证规则、分类、锁定、来源和版本；`npm run test:server` 使用假客户端验证上传限制、重复请求、异常文字、参考拒绝、无图片、超时恢复、确认与重启，不调用付费服务。
 
 启动本机版后，设置 `PLAYWRIGHT_PATH` 为 Playwright 安装目录、`SITE_URL=http://localhost:4173/`，运行 `node tests/studio-flow.cjs`。该浏览器测试真实调用本机上传，拦截所有 Lovart 任务响应，不消耗额度。原有 `gallery-flow.cjs` 和 `categories-flow.cjs` 继续回归图库。真实 Lovart 生成验收由用户配置后在网页点击触发。
+
+## 导出到 Lovart（无需 AK/SK）
+
+点击页头「导出到 Lovart」，选择「角色设定＋一张预览图」「只整理设定与提示词」或「只识图提取特征」。导出实时使用当前表单的参数、锁定、来源和改进要求，不使用尚未更新的旧档案。可填写已有 Lovart 项目链接，留空打开首页；仅接受 Lovart HTTPS 首页／canvas 项目链接。
+
+点击「复制并打开 Lovart」后，在 Lovart 粘贴指令，上传／关联清单中的参考图，再亲自发送。可仅复制或下载 Markdown 备份。第三方图库只输出当前有效参考的链接，不批量下载图片。本机上传图不会随文本导出传输；图片文件必须另行上传。网页不自动提交生成、不读取 Lovart 的登录凭据、不自动同步结果，也不把本地文件地址当作 Lovart 可访问的图片链接。API 接入保留为已有可用凭据账号的可选功能，当前推荐使用半自动导出。
