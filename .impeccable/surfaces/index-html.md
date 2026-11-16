@@ -30,3 +30,6 @@ Add a visible export shortcut and a form-top handoff section within the existing
 
 ## Model connection extension — 2026-11-16
 Preserve incumbent Operate system. Header shortcut opens a disclosure before workspace with endpoint/model/password fields, enable checkbox, save/test/clear and explicit state. Same typography/spacing and responsive grid; no new imagery or visual system.
+
+## Independent dialogs — 2026-11-16
+Explicit user direction: gallery, model connection and Lovart export open independent native dialogs. Preserve incumbent tokens, fixed close header, internal scroll, native modal focus and state. Gallery category groups are initially collapsed to show first-row images while preserving current facets/counts/search. No visual-system replacement.

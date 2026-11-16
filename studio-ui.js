@@ -89,7 +89,7 @@ $('lovart-target').value=read('character-studio-lovart-target','');exportTarget(
 $('lovart-target').addEventListener('input',exportTarget);
 $('lovart-export-task').addEventListener('change',()=>renderExport(window.CharacterApp.conditions()));
 $('lovart-copy').addEventListener('click',()=>copyExport());$('lovart-copy-open').addEventListener('click',()=>copyExport(true));
-$('open-lovart-export').addEventListener('click',()=>{document.querySelector('[data-step=studio]').click();renderExport(window.CharacterApp.conditions());$('lovart-export').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+$('open-lovart-export').addEventListener('click',()=>{renderExport(window.CharacterApp.conditions());window.ToolDialogs.open('lovart-dialog',$('open-lovart-export'));});
 $('lovart-download').addEventListener('click',()=>{
  if(!window.CharacterApp.validate()||!exportTarget())return;
  const c=window.CharacterApp.conditions(),text=core.lovartExport(c,$('lovart-export-task').value).text,url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),a=node('a');a.href=url;a.download=(c.name||'未命名角色').replace(/[\\/:*?"<>|]/g,'_')+'-Lovart生成指令.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('lovart-export-status').textContent='指令文件已导出。可复制文件中的文字到 Lovart；参考图片需另外上传。';

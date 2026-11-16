@@ -116,3 +116,9 @@ GitHub Actions 在 main 更新时运行生成逻辑测试，构建并部署 Page
 启用兼容配置后，AI 设定走文字模型；涉及选中参考图的设定或提取需配置识图模型，上传图以图片内容发送，不使用不可访问的本机 URL。兼容接口本次仅接文字与识图，生图继续通过 Lovart 导出；已有 Lovart API 接入保留。在线 Pages 版只展示说明，不收集密钥或在浏览器直接调用模型。新后端部署后需重启现有本机服务一次。
 
 接口依据：[DeepSeek](https://api-docs.deepseek.com/)、[百炼兼容接口](https://help.aliyun.com/zh/model-studio/compatibility-of-openai-with-dashscope)、[Chat Completions](https://developers.openai.com/api/reference/resources/chat)。
+
+## 三个独立弹窗入口
+
+顶部「看图选择人物与服装」「AI 模型接入」「导出到 Lovart」分别打开独立弹窗。支持关闭按钮、Esc、点击遮罩，关闭后焦点返回入口；本页内的筛选、选择、任务类型、目标项目和未保存的配置输入保持不变。刷新会丢弃未保存的配置输入，密钥保存方式不变。弹窗内部滚动，手机端保持关闭区可见。图片放大是图库内的第二层弹窗，Esc 先关闭图片。
+
+图库默认折叠高级分类筛选，让可选图先出现；展开后仍可组合分类并查看联动数量，搜索与当前筛选路径保持可见。图库选择仍属角色条件表单，生成与导出使用相同参数。校验失败时关闭弹窗并显示需要修改的字段。关闭弹窗不会取消已经提交的模型任务。
