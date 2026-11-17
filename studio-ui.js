@@ -54,7 +54,7 @@ function renderUploads(){
   });
   const ref=state.uploads[role];if(ref){
    const text=node('p',ref.name+(health.local?' · 正在检查本机图片':' · 本地图片需在完整版中重新关联'));preview.append(text,button('移除',()=>{delete state.uploads[role];delete state.observations[role];set(state);changed();},'text-button'));
-   if(health.local)asset(ref.id).then(a=>{if(!preview.isConnected)return;text.textContent=ref.name+(a?' · 已保存在本机':' · 图片缺失，请重新上传');if(a){const img=node('img');img.src=a.url;img.alt=label+'参考';preview.prepend(img);}});
+   if(health.local||ref.libraryId)(!health.local&&ref.libraryId?window.PersonalLibrary.asset(ref.libraryId):asset(ref.id)).then(a=>{if(!preview.isConnected)return;text.textContent=ref.name+(a?' · 已保存在本机':' · 图片缺失，请重新上传');if(a){const img=node('img');img.src=a.url;img.alt=label+'参考';preview.prepend(img);}});
   }
  }
 }
@@ -184,8 +184,8 @@ function record(profile){
 }
 function imageFigure(container,ref,label){
  if(!ref)return;const fig=node('figure'),caption=node('figcaption',label);fig.append(caption);container.append(fig);
- if(!health.local){fig.prepend(node('p','本机图片，请在完整版关联。','studio-empty'));return;}
- asset(ref.id).then(a=>{if(!fig.isConnected)return;if(!a){fig.prepend(node('p','本机图片缺失，请重新关联。','studio-empty'));return;}const img=node('img');img.src=a.url;img.alt=label;fig.prepend(img);const link=node('a','打开或下载图片');link.href=a.url;link.target='_blank';link.rel='noopener';fig.append(link);});
+ if(!health.local&&!ref.libraryId){fig.prepend(node('p','本机图片，请在完整版关联。','studio-empty'));return;}
+ (!health.local&&ref.libraryId?window.PersonalLibrary.asset(ref.libraryId):asset(ref.id)).then(a=>{if(!fig.isConnected)return;if(!a){fig.prepend(node('p','本机图片缺失，请重新关联。','studio-empty'));return;}const img=node('img');img.src=a.url;img.alt=label;fig.prepend(img);const link=node('a','打开或下载图片');link.href=a.url;link.target='_blank';link.rel='noopener';fig.append(link);});
 }
 function renderResult(profile,isExample){
  if(!isExample)record(profile);
@@ -205,6 +205,14 @@ function renderResult(profile,isExample){
  select.addEventListener('change',()=>{const p=list.find(x=>x.id===select.value);if(p){window.CharacterApp.present(clone(p));notify('已查看历史版本，当前条件草稿保留。');}});row.append(label,select,node('p','自动保留最近 50 个版本。保存档案可长期保留；导出全部档案也包含这些版本。'));
  $('result').after(row);summary();
 }
-window.Studio={get:()=>core.normalize(state),set,summary,renderResult,refreshService:checkService,versions:()=>versions.filter(x=>window.CharacterApp.valid(x))};
+async function useLibrary(item,role){
+ if(busy)throw Error('请等待当前 AI 任务结束，再更换提炼对象。');
+ const platform={xiaohongshu:'小红书',behance:'Behance',pinterest:'Pinterest',local:'本地素材'}[item.collection.platform]||'参考库';
+ const name=(platform+' · '+item.collection.name+' · '+item.name).slice(0,120);
+ let ref={id:item.id,name};if(health.local)ref=await api('/api/uploads',{raw:item.blob,name});
+ state.uploads[role]={id:ref.id,name,libraryId:item.id};if(role==='person')state.anchor=null;if(role!=='style')state.sources[role]='upload';delete state.observations[role];
+ if(health.local)assets.set(ref.id,Promise.resolve(ref));set(state);changed();window.ToolDialogs.closeAll();$('open-studio').click();notify('已选作'+roleLabels[role]+'参考，可点击提取图片特征，或导出到 Lovart。');
+}
+window.Studio={useLibrary,get:()=>core.normalize(state),set,summary,renderResult,refreshService:checkService,versions:()=>versions.filter(x=>window.CharacterApp.valid(x))};
 set(state);queueMicrotask(checkService);
 })();

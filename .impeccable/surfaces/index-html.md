@@ -33,3 +33,6 @@ Preserve incumbent Operate system. Header shortcut opens a disclosure before wor
 
 ## Independent dialogs — 2026-11-16
 Explicit user direction: gallery, model connection and Lovart export open independent native dialogs. Preserve incumbent tokens, fixed close header, internal scroll, native modal focus and state. Gallery category groups are initially collapsed to show first-row images while preserving current facets/counts/search. No visual-system replacement.
+
+## Personal reference library — 2026-11-17
+Explicit preparatory entry for three platform collections, with optional future URLs. Independent native dialog, empty-group creation, local image tiles and selection into existing extraction roles. Preserve incumbent system and private storage boundaries. No platform scraping or production raster additions.

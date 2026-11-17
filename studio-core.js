@@ -26,7 +26,7 @@ function normalize(source){
  }
  for(const role of ['person','outfit'])if(['gallery','upload','none'].includes(s.sources?.[role]))result.sources[role]=s.sources[role];
  for(const role of ['person','outfit','style']){
-  const u=s.uploads?.[role];if(u&&/^[a-f0-9]{32}$/.test(u.id))result.uploads[role]={id:u.id,name:text(u.name,120)};
+  const u=s.uploads?.[role];if(u&&/^[a-f0-9]{32}$/.test(u.id))result.uploads[role]={id:u.id,name:text(u.name,120),...(typeof u.libraryId==='string'&&/^[a-f0-9]{32}$/.test(u.libraryId)?{libraryId:u.libraryId}:{})};
   if(typeof s.observations?.[role]==='string')result.observations[role]=text(s.observations[role],800);
  }
  if(s.anchor&&/^[a-f0-9]{32}$/.test(s.anchor.id))result.anchor={id:s.anchor.id,name:text(s.anchor.name,120)};
