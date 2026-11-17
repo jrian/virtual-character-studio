@@ -1,36 +1,38 @@
 ---
-name: 角色工坊
-description: 清晰、克制的虚拟角色条件与档案工作界面
+name: 角色样本工作室
+description: 暖白工作纸、深茄墨色与清晰参考分工，兼顾角色编辑效率和档案质感
 colors:
-  green: "#254a3b"
-  green-hover: "#173a2b"
-  ground: "#edf1ee"
-  paper: "#fff"
-  ink: "#243a30"
-  muted: "#5d7065"
-  selected: "#e1ece4"
-  line: "#d7e1da"
-  soft: "#f5f7f5"
-  control-border: "#bdccc1"
-  secondary-border: "#abbdb1"
-  focus: "#61816b"
-  warn: "#78541d"
-  warn-bg: "#faf0d9"
+  aubergine: "#403346"
+  aubergine-hover: "#302336"
+  ground: "#f2eee8"
+  paper: "#fcfaf6"
+  muted: "#6b5b6f"
+  selected: "#e9e1e5"
+  line: "#d9d0d6"
+  soft: "#f7f3ee"
+  control-border: "#bfb1bf"
+  ochre: "#a35930"
+  sample-orange: "#b86b3e"
+  focus: "#8b4b29"
+  warn: "#85491f"
+  warn-bg: "#f6e7d9"
+  profile-ink: "#625066"
+  action-surface: "#eee8e9"
 typography:
   display:
     fontFamily: 'CharacterDisplay, "PingFang SC", sans-serif'
-    fontSize: "clamp(25px, 2.5vw, 36px)"
-    fontWeight: 650
+    fontSize: "25px"
+    fontWeight: 600
     lineHeight: 1.4
     letterSpacing: "-0.025em"
   profile-name:
     fontFamily: 'CharacterDisplay, "PingFang SC", sans-serif'
-    fontSize: "36px"
+    fontSize: "30px"
     fontWeight: 600
     lineHeight: 1.4
-    letterSpacing: "0.06em"
+    letterSpacing: "0.035em"
   title:
-    fontSize: "17px"
+    fontSize: "15px"
     fontWeight: 600
     lineHeight: 1.5
   body:
@@ -40,48 +42,53 @@ typography:
   profile-body:
     fontSize: "13px"
     lineHeight: 1.95
-  label:
+  control:
     fontSize: "13px"
+  label:
+    fontSize: "12px"
     fontWeight: 550
   note:
     fontSize: "12px"
 rounded:
   tag: "4px"
-  control: "6px"
-  button: "7px"
+  field: "5px"
+  button: "6px"
+  reference: "7px"
   notice: "8px"
-  panel: "14px"
+  panel: "12px"
 spacing:
   xs: "8px"
   sm: "12px"
-  field: "16px"
-  group: "24px"
-  panel-x: "26px"
+  field: "18px"
+  panel-x: "24px"
+  workspace: "30px"
 components:
   button-primary:
-    backgroundColor: "{colors.green}"
+    backgroundColor: "{colors.aubergine}"
     textColor: "{colors.paper}"
     rounded: "{rounded.button}"
-    padding: "11px 17px"
+    padding: "9px 15px"
+    typography: "{typography.control}"
   button-primary-hover:
-    backgroundColor: "{colors.green-hover}"
+    backgroundColor: "{colors.aubergine-hover}"
   button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.green}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.aubergine}"
     rounded: "{rounded.button}"
-    padding: "11px 17px"
+    padding: "9px 15px"
   button-secondary-hover:
     backgroundColor: "{colors.selected}"
   field:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.control}"
-    padding: "10px 12px"
+    textColor: "{colors.aubergine}"
+    rounded: "{rounded.field}"
+    padding: "9px 11px"
     width: "100%"
   choice-selected:
     backgroundColor: "{colors.selected}"
-    rounded: "{rounded.control}"
-    padding: "9px 13px"
+    textColor: "{colors.aubergine}"
+    rounded: "{rounded.button}"
+    padding: "8px 13px"
   panel:
     backgroundColor: "{colors.paper}"
     rounded: "{rounded.panel}"
@@ -91,115 +98,119 @@ components:
     padding: "4px 9px"
 ---
 
-# Design System: 角色工坊
+# Design System: 角色样本工作室
 
 ## Overview
 
-**Creative North Star: "角色工作台"**
+**Creative North Star: "角色样本工作室"**
 
-浅鼠尾草色底面托住白色编辑区与阅读面，森林绿标示行动与选择。紧凑的中文控件服务于条件编辑，较舒展的人物档案服务于连续阅读；内容层级依靠字号、留白和细分隔线形成。
+暖白纸面承载条件与档案，深茄墨色建立阅读和操作层级，赭橙点明参考入口与当前编辑分组。界面像持续使用的角色工作纸：紧凑但有呼吸，先看到参考分工与实际内容，再深入工具。
 
-这是对实际实现的记录，视觉命名为文档描述，并不代表用户另行批准了品牌方向。方向选择页等待超时，当前方向按可逆假设落地；没有已批准的设计稿或 QUALITY BAR 卡。未来大幅改变视觉身份时需重新确认方向。本界面保持本地规则生成的事实边界；外部服装资源以元数据和可选选择器呈现，不把元数据表现成已生成的图片或推断结果。
+这是用户确认的替换视觉世界，兼顾效率与质感，并保留全部功能及独立弹窗。样本感来自真实参考、字体、边线和留白，不依赖新制作的装饰位图。以下记录最终 `styles.css` 与 `studio.css` 的有效层叠值；首屏构图的详细约定仍归 `.impeccable/surfaces/index-html.md`。
 
 **Key Characteristics:**
-- 浅灰绿底面、森林绿操作、白色阅读面。
-- 专用中文展示字配系统正文与原生表单。
-- 选择、生成快照与待更新状态均有文字线索。
-- 平面容器、细边线、有限的圆角层级。
+- 暖白底面、深茄操作与赭橙指引。
+- 人物、服装、风格参考各有可见来源与独立用途。
+- 当前条件与生成版本分开呈现，状态有明确文字。
+- 编辑纸面与平直档案页形成轻重关系，工具保持独立弹窗。
 
 ## Colors
 
-单一绿色主调配低饱和中性色；琥珀仅解释条件与结果不一致的状态。规范值由文件顶部 tokens 定义。
+暖中性色围绕深茄墨色组织，赭橙用于局部指引；规范色值以顶部 tokens 为准。
 
 ### Primary
-- **森林绿（green）**：主要操作、当前导航、链接与品牌笔画。
-- **深林绿（green-hover）**：主要按钮悬停。
-- **淡叶绿（selected）**：已选条件、次级按钮悬停和资源说明背景。
+- **深茄墨（aubergine）**：主要文字、主按钮、当前主导航及结果页顶线；深茄悬停色用于主按钮反馈。
+- **浅茄纸（selected）**：选择底色、次级悬停和档案空态。
+
+### Secondary
+- **赭橙（ochre）**：参考选择入口和灵感文字的悬停反馈。
+- **样本橙（sample-orange）**：当前条件分组的短底线，保持文本本身可读。
 
 ### Neutral
-- **鼠尾草底（ground）**：页面底面、快照标签与状态标签。
-- **白纸（paper）**：编辑、档案及资源列表阅读面。
-- **深绿墨（ink）**：标题和主要正文。
-- **草木灰（muted）**：辅助说明与非当前导航。
-- **浅叶分隔（line）**：容器内部边界、表单与结果分段。
-- **柔灰绿（soft）**：继续下一步等次级操作底面。
-- **控件边线（control-border）、次级边线（secondary-border）**：保持可见的交互边界。
-- **聚焦绿（focus）**：键盘焦点，配合轮廓偏移确保可见。
-- **琥珀文字（warn）与浅琥珀底（warn-bg）**：条件已变化、档案待重新生成的提示。
+- **暖底（ground）、暖白纸（paper）、柔纸（soft）**：分别用于页面、主体阅读面和次级内容底面。
+- **灰茄（muted）、档案墨（profile-ink）**：辅助说明与长篇档案文字。
+- **纸缝线（line）、控件边线（control-border）**：区分分段和可编辑边界。
+- **操作纸（action-surface）**：生成操作区的浅色承托。
+- **焦点赭（focus）**：清晰的键盘聚焦轮廓；**警示赭（warn）与浅警示纸（warn-bg）**解释条件已变更、档案待更新。
 
-**The State Has Words Rule.** 已选状态与待更新状态需要文字或勾选线索，不能只改变底色。
+**The State Has Words Rule.** 选择、来源、待更新和任务状态必须带文字或勾选线索，不能仅依赖色差。
+
+源码保留 `--green`、`--green-hover` 兼容名称，其值分别为深茄墨与深茄悬停色；这些名称不代表绿色视觉身份。`--ink` 与 `--green` 共用深茄墨值。
 
 ## Typography
 
-**Display Font:** CharacterDisplay，即自托管 Noto Sans SC 展示子集；中文回退为 PingFang SC、sans-serif。
-**Body Font:** 系统 UI 栈，见 body token。正文和控件均不请求远程字体。
+**Display Font:** CharacterDisplay，自托管 Noto Sans SC 展示子集，回退 PingFang SC、sans-serif。
+**Body Font:** 系统 UI 栈，见 body token；表单和档案正文继承此栈。
 
-展示字只用于页面主标题和角色姓名。字体文件位于 `assets/fonts/noto-sans-sc-display.ttf`，按 SIL OFL 1.1 分发，出处和许可随 `assets/fonts/SOURCE.txt`、`assets/fonts/OFL.txt` 保存。子集之外的用户姓名字符由已安装字体回退，不保证整个人名使用同一展示字形。
+展示字用于主标题和角色姓名，其他内容保持系统正文的阅读效率。字体出处和 SIL OFL 1.1 许可保留在 `assets/fonts/SOURCE.txt` 与 `assets/fonts/OFL.txt`；字体子集之外的字由系统回退。
 
 ### Hierarchy
-- **Display**：流式主标题，较紧的负字距；不是大面积宣传文案。
-- **Profile name**：角色姓名使用较宽字距，小屏（≤480px）降至 30px。
-- **Title**：编辑区标题；结果工具栏标题降为 14px，小屏为 13px。
-- **Body**：全局正文与原生控件继承系统字体；档案段落使用 profile-body，最多 72ch。
-- **Label / Note**：表单名称与辅助信息分层，说明不使用装饰性大写标签。
+- **Display**：桌面主标题使用 display，小屏（≤600px）为 23px。
+- **Profile name**：角色姓名使用 profile-name，维持轻微正字距。
+- **Title**：工作面标题为 15px；弹窗桌面标题为 16px，小屏为 17px。
+- **Body / Profile body**：全局正文与档案段落分别使用对应 token，档案段落最大 72ch。
+- **Control / Label / Note**：桌面控件 13px，表单名称与说明通常 12px；≤600px 的表单及工具弹窗输入为 14px、至少 44px 高。
 
-**The Two Reading Speeds Rule.** 编辑控件保持紧凑；人物段落保留更宽的行距，不把长篇档案压成标签密度。
+**The Two Reading Speeds Rule.** 条件操作保持紧凑；长篇角色段落保留更宽行距。
 
 ## Layout
 
-主容器最大宽度 1490px，桌面水平内边距为 4.2%，顶部 38px、底部 60px。桌面工作区采用两列 `minmax(350px, .88fr) minmax(440px, 1.2fr)`，列距 24px。实际页头最小高度为 88px，包含创建、档案、参考资源三个目的地；这两项是已实现值，取代早期方向简述中的 80px 和两个目的地。
+主容器最大宽度（1600px），桌面内边距（27px 38px 38px）。页头最小高度（70px）。工作区桌面两列为 `minmax(0,1.25fr) minmax(0,1fr)`，列距（30px）；条件面更宽，生成档案保留独立阅读面。条件内水平留白通常（24px），普通字段双列间距（18px），身份字段使用（1.7fr 1fr 1fr）。
 
-表单常用双列字段，列距 16px；面板内部水平留白通常 26px。档案桌面内边距为 32px 34px 35px，最大阅读高度 710px，独立滚动并保留滚动条槽。宽屏 ≥1600px 时顶部留白 45px、档案最大高度 780px。
+参考条横向保留人物、服装、风格三种角色与工具区；≤900px 时工具区换到下一行，工作区变为单列，显示条件／档案定位。≤600px 时页面侧距（20px），参考仍为三列，但缩略图和说明转成纵向排列；身份字段首项通栏，捏脸字段转为单列。手机保留文字导航和所有工具入口。
 
-≤1100px 时收紧列距为 18px，字段面板边距为 22px；≤820px 时工作区改为一列，页面水平留白为 5%，表单先于结果，档案取消内部最大高度。≤480px 时导航独占一行、简介换行，引用选择器中的双列字段改为一列。长来源编号允许换行；字段网格子项和 select 具有最小宽度约束，避免横向撑破容器。
+桌面档案可粘附视口上缘（20px），正文最大高度（650px）并独立滚动；≥1600px 为（730px）。≤900px 取消粘附与正文高度上限，改为页面自然滚动。长来源和文件名可换行；参考条的来源摘要可省略，完整来源在选择器或档案中呈现。
 
 ## Elevation & Depth
 
-静态面板不使用阴影；深度来自底面与白纸的色差、边线和留白。底部提示 toast 使用唯一浮层阴影（`0 8px 25px #213b3026`）表明临时反馈层。
+主要靠纸面色差、细线与留白形成层级。条件面为暖白圆角纸，结果面以深茄顶线和直边正文区区分。静态面板没有阴影；临时 toast 使用柔和阴影（`0 8px 25px #40334626`），原生弹窗使用深茄半透明遮罩（`#2b2133bf`）。
 
-**The Quiet Surface Rule.** 常驻编辑和阅读容器保持平面，浮层阴影留给临时反馈。
+**The Quiet Surface Rule.** 常驻编辑与阅读面保持平静，临时反馈和模态遮罩承担浮层提示。
 
-结果更新时使用 450ms 的浅绿到白色揭示动画；toast 使用 150ms 透明度与 250ms 位移，缓动为 `cubic-bezier(.16,1,.3,1)`。系统减少动态效果偏好下关闭动画与过渡。
+档案更新采用（450ms）的揭示动画；toast 透明度（150ms）、位移（250ms），缓动为 `cubic-bezier(.16,1,.3,1)`。遵循减少动态效果偏好，关闭动画及过渡。
 
 ## Shapes
 
-面板圆角大于控件，控件大于标签；各级规范值见 rounded tokens。输入框和选择条件采用细实线边界，白色容器主要靠色差成形。导航使用底部短实线标记当前页。图标为内联 SVG 线条；选中勾号由 CSS 边线绘制。无随站点分发的位图素材。
+输入框圆角（5px），按钮和选择条件（6px），参考选择卡（7px），条件面与工具弹窗（12px）；只读标签使用（4px）。结果阅读区保持平直，不复制编辑面的大圆角。细实线用于控件和分隔；当前主导航为深茄底线（3px），条件分组为样本橙底线（2px）。图标使用内联 SVG，选中勾号由 CSS 边线绘制。
 
 ## Components
 
 ### Buttons
-主要按钮为森林绿白字，最小高度 44px；生成按钮通栏，使用 13px 17px 内边距与 15px 字号。次级按钮透明底加细边线，悬停呈淡叶绿。紧凑保存按钮使用 12px 字号、8px 13px 内边距和 36px 最小高度。文字按钮降低视觉重量，用于重置、继续变体等辅助动作。禁用状态保留 0.5 透明度。
+紧凑、明确，主次由填充而非体积区分。主要按钮为深茄暖白字，通用最小高度（41px），生成按钮（43px）并通栏。次级按钮暖白底加细边线；悬停为浅茄纸。文字按钮用于恢复、参考选择和辅助操作。禁用态保留（0.5）透明度。所有可聚焦交互沿用（3px）焦点轮廓，通常偏移（4px）。
 
 ### Chips
-可选择条件使用原生 radio/checkbox 配 label，选中为淡叶绿、较深边线与勾号。生成快照标签为只读文本，其低对比底面与小圆角不暗示交互。
+选择条件由原生 radio／checkbox 与 label 组合；浅茄底、较深边线和勾号表示已选。档案快照标签使用暖底和小圆角，仅用于只读摘要。分类按钮保留数量及选中状态，不因筛选丢失已选来源。
 
 ### Cards / Containers
-编辑区与档案面板为白色大圆角容器，无静态阴影。内部分段以浅边线区分；底部操作区使用浅灰绿。资源和档案列表采用连续行，仅首尾外侧保留面板圆角。
+编辑面暖白、有圆角、无阴影。生成操作区使用操作纸，档案工具栏及底部操作直接位于页面底面。参考列表以图片、名称和来源为主，图库内部卡保留细边，个人参考库采用分隔线。
 
 ### Inputs / Fields
-原生 input/select/textarea 具有白底、细边线、控件圆角及至少 43px 高度。悬停边线加深（`#7d9987`）。键盘焦点为 3px 聚焦绿轮廓，通常外移 4px；选择条件将焦点轮廓转移至可见 label。多行输入允许纵向调整。服装条目为原生多行 select，高度 160px；浏览器自身绘制选项选择状态。
+原生输入、选择及文本框为暖白、细边线，桌面内边距（9px 11px）；悬停边线加深（`#8f738e`）。多行输入可纵向调整。键盘选择项将焦点轮廓移到可见 label，保持勾选和锁定可辨认。
 
 ### Navigation
-主导航与条件分组都采用文字加底线，不使用填充式大胶囊。当前主导航底线为 3px，条件分组为 2px。手机端保留文本目的地，不依赖纯图标导航。
+主导航与四个条件分组均为文字加底线。手机页头为品牌和模型入口一行、导航一行；工作区定位提供明确文字链接。折叠服务说明保持次要层级，常用字段直接可编辑。
 
-### Provenance disclosures
-服装库存、Fashionpedia 和外观参考采用原生 details/summary。展开后才显示可选筛选器、数量、来源链接和说明。Open Pose & Costume、AI Library 是服装元数据来源，Fashionpedia 提供分类与属性；不展示本站复制的原图。来源详情与角色正文分层，保留明确的外链文案。
+### Long-form sections
+捏脸与 AI 采用三个可定位分区：参考与来源、捏脸特征、AI 设计与任务。13 组特征及锁定完整保留在默认关闭的原生 details，参考来源默认展开；特征锚点会先展开再定位。分区导航粘附顶部（0px），桌面链接至少（40px）高，小屏（44px），目标滚动避让分别为（78px／82px）。生成范围、补充说明、生成按钮和任务反馈独立成段，详细编辑展开后仍可通过分区导航直达，避免把操作埋在长表单末尾。
 
-### Result snapshot and stale state
-姓名后依次出现简述、条件快照和人物分段。条件修改后，琥珀文字提示位于工具栏下方；保留旧内容并说明重新生成后才使用新条件。保存、复制、下载动作在同一工具栏，图标按钮带可读名称。
+### Reference roles and version surfaces
+人物、服装、风格三个参考槽持续显示当前条件的来源、缩略图或用途图标；不同用途的浅底色辅助识别，不替代文字。生成后来源进入对应版本，条件变化不会把旧档案悄然改成新版本。空态以简洁指引代替虚构成品。
+
+### Independent dialogs
+人物与服装图库、模型接入、Lovart 导出、我的参考库分别使用独立原生 dialog。保留标题、固定关闭区、内部滚动和原生模态焦点；图片放大另用查看弹窗。普通工具桌面宽度上限（860px），宽版（1120px），最大高度（90dvh）；≤600px 留屏幕边距（10px），内部边距以（16px）为主。图库默认折叠分类、先展示参考图；手机图库两列，区别于三列的当前参考条。
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** 使用森林绿强调行动与当前状态，以白纸承载编辑和长文。
-- **Do** 为选择、快照和待更新状态提供明确文字线索。
-- **Do** 保持移动端先编辑后阅读的顺序，展开来源选择器时允许自然纵向增长。
-- **Do** 保存自托管展示字体的出处与 OFL 许可，并允许子集之外的中文字符回退。
-- **Do** 保留本地规则生成与元数据来源的准确说明。
+- **Do** 用暖白纸和深茄墨组织阅读，赭橙标示参考入口与当前分组。
+- **Do** 保持三类参考的用途和来源可见，明确区分当前条件与生成版本。
+- **Do** 在手机保留全部目的地、独立工具弹窗和条件／档案定位。
+- **Do** 保留字体出处及许可，允许展示子集之外的字形回退。
+- **Do** 用真实选中内容、文字状态和原生控件表达功能结果。
+- **Do** 为长表单提供可见分区定位，将详细编辑与生成操作分段，并保留所有字段及锁定。
 
 ### Don't:
-- **Don't** 将静态面板改为悬浮阴影卡，或把只读快照包装成交互按钮。
-- **Don't** 将展示字体扩展为所有表单与长文的默认字体。
-- **Don't** 把外链图片、服装标签或分类属性表现为本站已生成的角色图片。
-
-记录范围：基于 `styles.css`、`index.html`、`PRODUCT.md` 与实际展开服装库界面。已打开检查 `.impeccable/review/desktop.png`（1440px 全页）、`mobile.png`（390px 全页）、`mobile-outfits.png`；浏览器结果记录为通过。扩展范围覆盖 Open Pose & Costume、AI Library、Fashionpedia，当前文档交付处置为 **ship**，无需实质性修复或应用代码调整。未规范化、未修复的缺陷：无新增已确认问题；未批准方向与未提供 QUALITY BAR 属于视觉授权依据限制，未将其写成用户确认的设计决定。
+- **Don't** 因兼容变量仍叫 green 而恢复旧绿色视觉身份。
+- **Don't** 把只读版本快照绘制成可操作按钮，或只用颜色解释更新状态。
+- **Don't** 将常驻工作面改成带强阴影的浮卡，或把展示字体扩散到所有长文与表单。
+- **Don't** 把外链参考或本地规则组合表现为本站已生成、已识别的角色图片。

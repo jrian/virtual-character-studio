@@ -26,7 +26,7 @@ async function checkService(){
  const local=['localhost','127.0.0.1'].includes(location.hostname)&&location.protocol==='http:';
  try{health=local?await api('/api/health'):{local:false,configured:false,projectReady:false};}catch{health={local:false,configured:false,projectReady:false};}
  $('service-status').textContent=!health.local?'在线基础版：参数捏脸、选图与 Lovart 导出可用；复制指令后到 Lovart 粘贴并发送。':!health.configured?'本机参考图服务已连接。使用「导出到 Lovart」即可继续创作，无需 AK/SK。':!health.projectReady?'Lovart 凭据已配置。请设置已有项目 ID，或在下方创建专用项目。':'本机完整版已连接。每次点击 AI 操作才发送选中的参考图，可能消耗 Lovart 额度。';
- if(health.local&&health.model?.enabled)$('service-status').textContent='自定义 AI 模型已启用：文字／识图使用接入模型，生图继续通过 Lovart 导出。';document.dispatchEvent(new CustomEvent('model-health',{detail:health}));if(health.local&&!available())$('local-help').open=true;controls();renderUploads();window.CharacterApp?.refreshResult();
+ if(health.local&&health.model?.enabled)$('service-status').textContent='自定义 AI 模型已启用：文字／识图使用接入模型，生图继续通过 Lovart 导出。';document.dispatchEvent(new CustomEvent('model-health',{detail:health}));controls();renderUploads();window.CharacterApp?.refreshResult();
  if(health.local&&!activeJob){try{const data=await api('/api/jobs');const recent=data.jobs.find(x=>['queued','running','pending_confirmation','timeout','interrupted'].includes(x.status))||data.jobs[0];if(recent)showJob(recent);}catch{/* Basic tools stay available. */}}
 }
 function renderFeatures(){
@@ -94,9 +94,25 @@ $('lovart-download').addEventListener('click',()=>{
  if(!window.CharacterApp.validate()||!exportTarget())return;
  const c=window.CharacterApp.conditions(),text=core.lovartExport(c,$('lovart-export-task').value).text,url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),a=node('a');a.href=url;a.download=(c.name||'未命名角色').replace(/[\\/:*?"<>|]/g,'_')+'-Lovart生成指令.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('lovart-export-status').textContent='指令文件已导出。可复制文件中的文字到 Lovart；参考图片需另外上传。';
 });
+const referenceKeys=new Map();
+document.addEventListener('reference-image-removed',event=>{for(const role of ['person','outfit','style'])if(state.uploads[role]?.libraryId===event.detail.id)referenceKeys.delete(role);summary();});
+function renderDraftReferences(c){
+ for(const role of ['person','outfit','style']){
+  const holder=$('reference-thumb-'+role),caption=$('reference-detail-'+role);if(!holder)continue;
+  const upload=state.uploads[role],source=role==='style'?'upload':state.sources[role],gallery=role==='person'?c.reference:c.outfit;
+  const key=JSON.stringify([source,source==='upload'?upload:gallery,health.local]);if(referenceKeys.get(role)===key)continue;referenceKeys.set(role,key);
+  if(!holder.dataset.empty)holder.dataset.empty=holder.innerHTML;holder.innerHTML=holder.dataset.empty;
+  let url=null;
+  if(source==='gallery'&&gallery){caption.textContent='本次使用 · '+(gallery.id&&role==='person'?gallery.id:gallery.code);url=role==='person'?gallery.thumb:gallery.origin+'thumbs/'+gallery.code+'.webp';}
+  else if(source==='upload'&&upload){caption.textContent='本次使用 · '+upload.name;const promise=!health.local&&upload.libraryId?window.PersonalLibrary?.asset(upload.libraryId):health.local?asset(upload.id):Promise.resolve(null);Promise.resolve(promise).then(a=>{if(referenceKeys.get(role)!==key)return;if(a)addImage(a.url);else caption.textContent=upload.name+' · 图片缺失，请重新关联';}).catch(()=>{if(referenceKeys.get(role)===key)caption.textContent=upload.name+' · 图片无法读取，请重新关联';});}
+  else caption.textContent=role==='style'?'尚未添加风格图':source==='none'?'本次仅使用文字条件':source==='upload'?'尚未上传图片':'尚未选择'+roleLabels[role];
+  function addImage(src){if(!src)return;const img=node('img');img.alt=roleLabels[role]+'参考';img.loading='lazy';img.referrerPolicy='no-referrer';img.src=src;img.addEventListener('error',()=>{if(img.isConnected){holder.innerHTML=holder.dataset.empty;caption.textContent+=' · 缩略图不可用';}},{once:true});holder.replaceChildren(img);}
+  if(url)addImage(url);
+ }
+}
 function summary(){
  if(!window.CharacterApp)return;
- const c=window.CharacterApp.conditions(),labels=[];renderExport(c);
+ const c=window.CharacterApp.conditions(),labels=[];renderExport(c);renderDraftReferences(c);
  for(const role of ['person','outfit']){const source=state.sources[role],ref=source==='upload'?state.uploads[role]?.name:source==='gallery'?(role==='person'?c.reference?.id:c.outfit?.code):null;labels.push(`${roleLabels[role]}：${ref||(source==='upload'?'上传图片缺失':'仅文字条件')}`);}
  if(state.uploads.style)labels.push('风格：'+state.uploads.style.name);
  $('active-reference-summary').textContent='本次参考 · '+labels.join('；');
@@ -188,6 +204,7 @@ function imageFigure(container,ref,label){
  (!health.local&&ref.libraryId?window.PersonalLibrary.asset(ref.libraryId):asset(ref.id)).then(a=>{if(!fig.isConnected)return;if(!a){fig.prepend(node('p','本机图片缺失，请重新关联。','studio-empty'));return;}const img=node('img');img.src=a.url;img.alt=label;fig.prepend(img);const link=node('a','打开或下载图片');link.href=a.url;link.target='_blank';link.rel='noopener';fig.append(link);});
 }
 function renderResult(profile,isExample){
+ if(isExample){renderVersionControls(null);summary();return;}
  if(!isExample)record(profile);
  const result=$('result'),s=core.normalize(profile.conditions.studio);
  document.querySelector('.result-bottom>span').textContent=profile.kind==='ai'?(profile.provider?.name||'Lovart')+' AI 设定 · 请检查后使用':profile.kind==='preview'?'Lovart 图片预览 · 文字来源见版本':'本地规则组合 · 可继续编辑完善';$('regenerate').textContent=profile.kind==='ai'||profile.kind==='preview'?'按当前条件生成基础新版':'按当前条件换一版';
@@ -198,12 +215,15 @@ function renderResult(profile,isExample){
  const previous=versions.find(x=>x.id===profile.version?.parentId);if(previous?.preview)imageFigure(comparison,previous.preview,'上一版预览');
  if(profile.preview)imageFigure(comparison,profile.preview,'本次角色预览');if(comparison.children.length)result.prepend(comparison);
  if(profile.preview){const actions=node('div',undefined,'studio-result-actions'),accept=button('确认此图，作为后续身份参考',async()=>{if(!await asset(profile.preview.id)){notify('本机图片缺失，请先重新关联。');return;}state.anchor={id:profile.preview.id,name:profile.name+' · 版本 '+(profile.version?.number||1)};state.mode='preserve';set(state);changed();notify('已确认身份参考，后续预览仍需检查一致性。');});accept.disabled=!health.local;actions.append(accept);result.prepend(actions);}
+ renderVersionControls(profile);summary();
+}
+function renderVersionControls(profile){
  document.getElementById('version-controls')?.remove();
  const row=node('div',undefined,'version-controls');row.id='version-controls';const label=node('label','版本记录'),select=node('select');select.id='version-select';label.htmlFor=select.id;
- const list=[profile,...versions.filter(x=>x.id!==profile.id)].filter(x=>window.CharacterApp.valid(x));
+ const list=[...(profile?[profile]:[]),...versions.filter(x=>x.id!==profile?.id)].filter(x=>window.CharacterApp.valid(x));if(!list.length)return;if(!profile){const placeholder=node('option','选择已生成版本继续查看');placeholder.value='';placeholder.disabled=true;placeholder.selected=true;select.append(placeholder);}
  list.forEach(p=>{const option=node('option',`${p.name} · v${p.version?.number||1} · ${p.kind==='ai'?'AI 设定':p.kind==='preview'?'图片预览':'基础设定'} · ${new Date(p.createdAt).toLocaleString('zh-CN')}`);option.value=p.id;select.append(option);});
  select.addEventListener('change',()=>{const p=list.find(x=>x.id===select.value);if(p){window.CharacterApp.present(clone(p));notify('已查看历史版本，当前条件草稿保留。');}});row.append(label,select,node('p','自动保留最近 50 个版本。保存档案可长期保留；导出全部档案也包含这些版本。'));
- $('result').after(row);summary();
+ $('result').after(row);
 }
 async function useLibrary(item,role){
  if(busy)throw Error('请等待当前 AI 任务结束，再更换提炼对象。');
