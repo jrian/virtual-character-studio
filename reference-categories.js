@@ -20,6 +20,6 @@ const outfitGarments=[
  {value:'other',label:'其他单品'}
 ];
 function portraitMatches(item,value){if(value==='all')return true;const text=item.style||'';if(value==='unspecified')return !portraitFeatures.some(x=>x.pattern?.test(text));return portraitFeatures.find(x=>x.value===value)?.pattern?.test(text)||false;}
-function outfitMatches(item,value){if(value==='all')return true;const text=item.keywords||'';if(value==='other')return !outfitGarments.some(x=>x.pattern?.test(text));return outfitGarments.find(x=>x.value===value)?.pattern?.test(text)||false;}
+function outfitMatches(item,value){if(value==='all')return true;const original=item.keywords||'',text=original+' '+[['dress',/连衣裙|礼服裙/],['skirt',/半身裙|短裙/],['pants',/长裤|短裤|西裤|内裤|牛仔裤|运动裤/],['jacket',/外套|夹克|大衣|风衣|西装|披风/],['shirt',/衬衫|T恤|上衣|卫衣|马甲|背心/i],['knit',/针织|毛衣|开衫/]].filter(([,pattern])=>pattern.test(original)).map(([word])=>word).join(' ');if(value==='other')return !outfitGarments.some(x=>x.pattern?.test(text));return outfitGarments.find(x=>x.value===value)?.pattern?.test(text)||false;}
 const api={portraitFeatures,outfitGarments,portraitMatches,outfitMatches};root.ReferenceCategories=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);

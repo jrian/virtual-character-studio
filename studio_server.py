@@ -56,6 +56,10 @@ def short(value, limit=1500):
     return value[:limit] if isinstance(value, str) else ''
 
 
+MALE_LIBRARY = json.loads((ROOT / 'data' / 'male-libraries.json').read_text(encoding='utf-8'))
+MALE_RECORDS = {x['id']: x for x in MALE_LIBRARY['portraits'] + MALE_LIBRARY['outfits']}
+
+
 def snapshot(source):
     if not isinstance(source, dict):
         raise Problem('角色条件格式不正确。')
@@ -68,6 +72,12 @@ def snapshot(source):
             out[key] = None
             continue
         url = short(item.get(urlkey), 1000)
+        canonical = MALE_RECORDS.get(item.get('id'))
+        if canonical:
+            if canonical.get(urlkey) != url:
+                raise Problem('男性素材地址与固定索引不一致。')
+            out[key] = {k: canonical[k] for k in ('id', 'code', 'keywords', 'style', 'hair', urlkey, 'sourceName', 'attribution', 'licenseUrl', 'aiImageAllowed') if k in canonical}
+            continue
         parsed = urllib.parse.urlparse(url)
         hosts = [host] if host else ['ai-costume-gallery.pages.dev', 'ai-costume-anime-gallery.pages.dev']
         if parsed.scheme != 'https' or parsed.netloc not in hosts:
@@ -144,7 +154,11 @@ def make_prompt(kind, conditions, refs):
               '人物参考、服装参考、画面风格参考各司其职，不转移身份。'
               'preserve=保持人物原貌，仅修改明确指定特征；redesign=借鉴已确认特征重新设计原创人物。'
               '身份锚图仅在 preserve 模式生效。补全模式不修改任何已有值；重新设计可为未锁定项提出建议，现有手动值需用户逐项确认后替换。\n')
-    payload = json.dumps({'conditions': conditions, 'referenceOrder': refs}, ensure_ascii=False)
+    prompt_conditions = json.loads(json.dumps(conditions))
+    if (prompt_conditions.get('outfit') or {}).get('aiImageAllowed') is False:
+        prompt_conditions['outfit'].pop('originImage', None)
+        prompt_conditions['outfit']['usage'] = '只用服装标签独立设计；原图不参与识图或改图。'
+    payload = json.dumps({'conditions': prompt_conditions, 'referenceOrder': refs}, ensure_ascii=False)
     if kind == 'preview':
         return common + ('仅生成一张角色预览图片，不生成视频、音频或多张变体。采用中文视觉描述，背景干净，'
                          '面部与服装清晰，遵守已确认的特征与修改要求。不要把人物原图的无关背景复制进新图。\n') + payload
@@ -235,7 +249,7 @@ class Studio:
                 result.append({'role': role, 'name': asset['name'], 'id': asset['id'], 'url': asset.get('hostedUrl') if remote else asset['url']})
             elif choice == 'upload' and role != 'style':
                 raise Problem('当前选择了上传图片，但图片缺失，请先上传或切换来源。')
-            elif choice == 'gallery' and conditions.get(key):
+            elif choice == 'gallery' and conditions.get(key) and conditions[key].get('aiImageAllowed') is not False:
                 result.append({'role': role, 'name': conditions[key]['id'], 'url': conditions[key][urlkey]})
         if s['anchor'] and s['mode'] == 'preserve':
             asset = self.asset(s['anchor']['id'])
@@ -273,6 +287,8 @@ class Studio:
             raise Problem('先配置 LOVART_PROJECT_ID，或点击「创建专用项目」。', 503)
         refs = self.references(c)
         if body['kind'] == 'extract' and not refs:
+            if (c.get('outfit') or {}).get('aiImageAllowed') is False:
+                raise Problem('该服装原图仅供浏览，本次只用标签生成；如需识图，请另选允许传入 AI 的参考图片。')
             raise Problem('请先选择或上传至少一张参考图。')
         with self.lock:
             for job in self.data['jobs'].values():

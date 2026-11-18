@@ -68,7 +68,7 @@ for(const [id,key] of [['identity-mode','mode'],['ai-strategy','strategy'],['ai-
 function renderExport(c){
  const pack=core.lovartExport(c,$('lovart-export-task').value);$('lovart-export-text').value=pack.text;
  $('lovart-reference-checklist').replaceChildren();
- for(const ref of pack.references){const p=node('p',`${ref.label} · ${ref.name}${ref.manual?'：需在 Lovart 手动上传或关联':'：指令已含原图链接；如无法读取，请在 Lovart 手动上传'}`);if(ref.url){const a=node('a','查看参考原图');a.href=ref.url;a.target='_blank';a.rel='noopener noreferrer';p.append(document.createTextNode(' '),a);}$('lovart-reference-checklist').append(p);}
+ for(const ref of pack.references){const p=node('p',`${ref.label} · ${ref.name}${ref.metadataOnly?'：许可限制，本次仅使用标签，不上传原图':ref.manual?'：需在 Lovart 手动上传或关联':'：指令已含原图链接；如无法读取，请在 Lovart 手动上传'}`);if(ref.url){const a=node('a','查看参考原图');a.href=ref.url;a.target='_blank';a.rel='noopener noreferrer';p.append(document.createTextNode(' '),a);}$('lovart-reference-checklist').append(p);}
 }
 function exportTarget(){
  try{const target=core.lovartTarget($('lovart-target').value);$('lovart-target-error').textContent='';$('lovart-target').removeAttribute('aria-invalid');$('lovart-open-link').href=target;store('character-studio-lovart-target',target);return target;}
@@ -103,7 +103,7 @@ function renderDraftReferences(c){
   const key=JSON.stringify([source,source==='upload'?upload:gallery,health.local]);if(referenceKeys.get(role)===key)continue;referenceKeys.set(role,key);
   if(!holder.dataset.empty)holder.dataset.empty=holder.innerHTML;holder.innerHTML=holder.dataset.empty;
   let url=null;
-  if(source==='gallery'&&gallery){caption.textContent='本次使用 · '+(gallery.id&&role==='person'?gallery.id:gallery.code);url=role==='person'?gallery.thumb:gallery.origin+'thumbs/'+gallery.code+'.webp';}
+  if(source==='gallery'&&gallery){caption.textContent='本次使用 · '+(gallery.id&&role==='person'?gallery.id:gallery.code);url=role==='person'?gallery.thumb:window.ReferenceAssets.thumb(gallery);}
   else if(source==='upload'&&upload){caption.textContent='本次使用 · '+upload.name;const promise=!health.local&&upload.libraryId?window.PersonalLibrary?.asset(upload.libraryId):health.local?asset(upload.id):Promise.resolve(null);Promise.resolve(promise).then(a=>{if(referenceKeys.get(role)!==key)return;if(a)addImage(a.url);else caption.textContent=upload.name+' · 图片缺失，请重新关联';}).catch(()=>{if(referenceKeys.get(role)===key)caption.textContent=upload.name+' · 图片无法读取，请重新关联';});}
   else caption.textContent=role==='style'?'尚未添加风格图':source==='none'?'本次仅使用文字条件':source==='upload'?'尚未上传图片':'尚未选择'+roleLabels[role];
   function addImage(src){if(!src)return;const img=node('img');img.alt=roleLabels[role]+'参考';img.loading='lazy';img.referrerPolicy='no-referrer';img.src=src;img.addEventListener('error',()=>{if(img.isConnected){holder.innerHTML=holder.dataset.empty;caption.textContent+=' · 缩略图不可用';}},{once:true});holder.replaceChildren(img);}
@@ -115,7 +115,7 @@ function summary(){
  const c=window.CharacterApp.conditions(),labels=[];renderExport(c);renderDraftReferences(c);
  for(const role of ['person','outfit']){const source=state.sources[role],ref=source==='upload'?state.uploads[role]?.name:source==='gallery'?(role==='person'?c.reference?.id:c.outfit?.code):null;labels.push(`${roleLabels[role]}：${ref||(source==='upload'?'上传图片缺失':'仅文字条件')}`);}
  if(state.uploads.style)labels.push('风格：'+state.uploads.style.name);
- $('active-reference-summary').textContent='本次参考 · '+labels.join('；');
+ if(state.sources.outfit==='gallery'&&c.outfit?.aiImageAllowed===false)labels.push('该服装原图不参与 AI，仅使用服装标签');$('active-reference-summary').textContent='本次参考 · '+labels.join('；');
  $('anchor-status').textContent=state.anchor?`已确认的身份参考：${state.anchor.name}${state.mode==='redesign'?'（重新设计时不使用）':''}`:'尚未确认身份预览。满意后可在结果中设为后续身份参考。';$('clear-anchor').hidden=!state.anchor;
  $('accepted-observations').replaceChildren();for(const [role,value] of Object.entries(state.observations)){if(!value)continue;const p=node('p',`已确认${roleLabels[role]}描述：${value}`);p.append(button('清除',()=>{delete state.observations[role];changed();},'text-button'));$('accepted-observations').append(p);}
 }

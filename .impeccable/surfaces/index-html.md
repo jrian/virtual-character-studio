@@ -39,3 +39,6 @@ Explicit preparatory entry for three platform collections, with optional future 
 
 ## Reference search extension — 2026-11-18
 Preserve approved Character Sample Studio identity and four native dialogs. Add multi-term intersection and minus-token exclusion with known synonyms, editable personal-image tags, a cross-library mode in the existing gallery dialog, and continuous append browsing with retained pagination. Search only factual metadata and user tags; never infer image features. Personal scope defaults to all groups, with an explicit current-group option. Local reference assets remain private. Existing selection and generated snapshots stay independent of search filters.
+
+## Male reference sources — 2026-11-18
+Extend the incumbent system only. Add metadata-labelled male/all/unlabelled selectors in existing portrait, outfit and cross-search views; retain selection across filters. Reuse actual pinned upstream images with contain framing and persistent source/license credits. Menswear-1200 stays browseable as unmodified originals, with metadata-only generation and no automatic AI image transfer; canonical backend enforces policy. Four dialogs and user character-gender controls remain independent. No new visual system or shipping raster assets.

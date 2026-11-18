@@ -50,9 +50,9 @@ function prompts(c,name){
  const identity=`人物身份：${name}，${c.age}岁，${c.gender}；${c.world}，${c.role}。${appearance||'脸部未限定，保持自然比例'}。${s.features.hairStyle?'':`发型：${c.hairstyle&&c.hairstyle!=='基础发型'?c.hairstyle:c.hair}。`}`;
  const refs=[];
  if(s.sources.person==='upload'&&s.uploads.person)refs.push(`人物参考：上传图片「${s.uploads.person.name}」；${s.mode==='preserve'?'以该图的脸部身份为基础，仅修改明确指定的特征':'仅借鉴已确认特征，设计新的原创人物，不复现原人物身份'}。`);
- if(e.reference)refs.push(`人物参考：FACE REFERENCE ${e.reference.id}，${e.reference.full}；${s.mode==='redesign'?'仅借鉴已确认特征，重新设计原创人物':'保留参考人物的身份特征，明确指定的修改除外'}。`);
+ if(e.reference)refs.push(`人物参考：${e.reference.sourceName||'FACE REFERENCE'} ${e.reference.id}，${e.reference.full}；${s.mode==='redesign'?'仅借鉴已确认特征，重新设计原创人物':'保留参考人物的身份特征，明确指定的修改除外'}。`);
  if(s.mode==='preserve'&&s.anchor)refs.push(`已确认的身份参考：${s.anchor.name}。`);
- const wardrobe=`服装造型：${s.sources.outfit==='upload'&&s.uploads.outfit?'参考上传服装「'+s.uploads.outfit.name+'」'+(s.observations.outfit?'，'+s.observations.outfit:''):e.outfit?e.outfit.code+'，'+e.outfit.keywords:c.wardrobe}。${c.fashionCategory?'服装类别：'+c.fashionCategory.name+'。':''}${c.fashionAttribute?'服装属性：'+c.fashionAttribute.name+'。':''}辨识物：${c.signature||'未限定'}。`;
+ const wardrobe=`服装造型：${s.sources.outfit==='upload'&&s.uploads.outfit?'参考上传服装「'+s.uploads.outfit.name+'」'+(s.observations.outfit?'，'+s.observations.outfit:''):e.outfit?e.outfit.code+'，'+e.outfit.keywords:c.wardrobe}。${c.fashionCategory?'服装类别：'+c.fashionCategory.name+'。':''}${c.fashionAttribute?'服装属性：'+c.fashionAttribute.name+'。':''}辨识物：${c.signature||'未限定'}。${e.outfit?.aiImageAllowed===false?'该服装原图为 CC BY-ND 参考，本次只依据服装标签独立设计，不分析、上传或改编原图。':''}`;
  const style=`画面风格：${s.uploads.style?'借鉴风格参考「'+s.uploads.style.name+'」的色彩、材质与光影，不转移人物身份'+(s.observations.style?'；'+s.observations.style:''):'干净背景，清晰展示人物面部与服装'}。`;
  const changes=`允许变化：${s.instructions||'未锁定的细节可在创作目标内完善'}。${c.notes?'创作者要求：'+c.notes:''}`;
  const negative='避免项：不要覆盖锁定特征，不将姿势或表情当作永久身份，不增加无关人物，避免重复面孔、五官错位与服装混用。';
@@ -73,14 +73,14 @@ function lovartExport(c,task='generate'){
   if(s.sources[role]==='upload')references.push({label,name:s.uploads[role]?.name||'尚未上传',manual:true,missing:!s.uploads[role]});
   else if(s.sources[role]==='gallery'){
    const ref=role==='person'?e.reference:e.outfit;
-   if(ref)references.push({label,name:ref.code||ref.id,url:role==='person'?ref.full:ref.originImage,manual:false});
+   if(ref)references.push({label,name:ref.code||ref.id,url:ref.aiImageAllowed===false?null:role==='person'?ref.full:ref.originImage,manual:false,metadataOnly:ref.aiImageAllowed===false,attribution:ref.attribution,licenseUrl:ref.licenseUrl});
   }
  }
  if(s.uploads.style)references.push({label:'画面风格',name:s.uploads.style.name,manual:true});
  if(s.anchor&&s.mode==='preserve')references.push({label:'已确认身份锚图',name:s.anchor.name,manual:true});
  const tasks={generate:'请根据以下已选择的参数，生成完整角色设定、中文生图提示词、避免项、即梦／Seedance角色一致性描述，并生成一张单人角色预览图。',extract:'请仅分析本次参考图，提取清晰可见的外貌、服装和画面风格，区分观察、不确定内容和改进建议。先输出文字供我确认，本次不要生成图片。',prompt:'请根据以下参数完善角色设定，整理中文生图提示词、避免项和即梦／Seedance角色一致性描述。本次只输出文字，不生成图片。'};
  const featureLines=Object.entries(s.features).map(([key,f])=>`- ${fields[key][0]}：${f.value}${f.locked?'；锁定，不可改动':'；保留当前设置，如需替换先提出差异供我确认'}`);
- const refLines=references.map((r,i)=>`${i+1}. ${r.label}：${r.name}${r.url?'\n   原图链接：'+r.url:r.missing?'\n   缺失：先等我补充图片，不要假定已获得参考。':'\n   待我在 Lovart 手动上传／关联该图片；本次导出没有传输图片文件。'}`);
+ const refLines=references.map((r,i)=>`${i+1}. ${r.label}：${r.name}${r.metadataOnly?'\n   仅使用服装标签；原图不作为 AI 输入，不执行原图改图。':r.url?'\n   原图链接：'+r.url:r.missing?'\n   缺失：先等我补充图片，不要假定已获得参考。':'\n   待我在 Lovart 手动上传／关联该图片；本次导出没有传输图片文件。'}${r.attribution?'\n   来源与许可：'+r.attribution+' '+r.licenseUrl:''}`);
  const content=[
  '# 角色工坊 → Lovart 生成任务',tasks[task]||tasks.generate,
  '## 当前选择的角色参数',`姓名：${c.name||'请根据角色设定命名'}\n创作用途：${c.purpose}\n年龄：${c.age}\n性别设定：${c.gender}\n身份定位：${c.role}\n世界背景：${c.world}\n性格：${(c.traits||[]).join('、')}\n声音与表达：${c.voice}\n发长：${c.hair}\n发型：${s.features.hairStyle?.value||c.hairstyle}\n整体服装方向：${c.wardrobe}\n辨识物：${c.signature||'未限定'}`,
