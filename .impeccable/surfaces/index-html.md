@@ -36,3 +36,6 @@ Explicit user direction: gallery, model connection and Lovart export open indepe
 
 ## Personal reference library — 2026-11-17
 Explicit preparatory entry for three platform collections, with optional future URLs. Independent native dialog, empty-group creation, local image tiles and selection into existing extraction roles. Preserve incumbent system and private storage boundaries. No platform scraping or production raster additions.
+
+## Reference search extension — 2026-11-18
+Preserve approved Character Sample Studio identity and four native dialogs. Add multi-term intersection and minus-token exclusion with known synonyms, editable personal-image tags, a cross-library mode in the existing gallery dialog, and continuous append browsing with retained pagination. Search only factual metadata and user tags; never infer image features. Personal scope defaults to all groups, with an explicit current-group option. Local reference assets remain private. Existing selection and generated snapshots stay independent of search filters.
